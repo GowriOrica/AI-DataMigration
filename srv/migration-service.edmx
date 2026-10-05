@@ -1,0 +1,893 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+    <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="MigrationService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Annotation Term="Core.Links">
+        <Collection>
+          <Record>
+            <PropertyValue Property="rel" String="author"/>
+            <PropertyValue Property="href" String="https://cap.cloud.sap"/>
+          </Record>
+        </Collection>
+      </Annotation>
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="MigrationRuns" EntityType="MigrationService.MigrationRuns"/>
+        <EntitySet Name="SourceSystems" EntityType="MigrationService.SourceSystems">
+          <NavigationPropertyBinding Path="connections" Target="SourceConnections"/>
+          <NavigationPropertyBinding Path="objects" Target="SourceObjects"/>
+        </EntitySet>
+        <EntitySet Name="SourceConnections" EntityType="MigrationService.SourceConnections">
+          <NavigationPropertyBinding Path="sourceSystem" Target="SourceSystems"/>
+        </EntitySet>
+        <EntitySet Name="SourceObjects" EntityType="MigrationService.SourceObjects">
+          <NavigationPropertyBinding Path="sourceSystem" Target="SourceSystems"/>
+          <NavigationPropertyBinding Path="metadata" Target="SourceMetadata"/>
+        </EntitySet>
+        <EntitySet Name="SourceMetadata" EntityType="MigrationService.SourceMetadata">
+          <NavigationPropertyBinding Path="sourceObject" Target="SourceObjects"/>
+          <NavigationPropertyBinding Path="fields" Target="SourceFields"/>
+        </EntitySet>
+        <EntitySet Name="SourceFields" EntityType="MigrationService.SourceFields">
+          <NavigationPropertyBinding Path="metadata" Target="SourceMetadata"/>
+        </EntitySet>
+        <EntitySet Name="RawRecords" EntityType="MigrationService.RawRecords"/>
+        <EntitySet Name="CanonicalCustomers" EntityType="MigrationService.CanonicalCustomers"/>
+        <EntitySet Name="TargetSystems" EntityType="MigrationService.TargetSystems">
+          <NavigationPropertyBinding Path="connections" Target="TargetConnections"/>
+          <NavigationPropertyBinding Path="objects" Target="TargetObjects"/>
+        </EntitySet>
+        <EntitySet Name="TargetConnections" EntityType="MigrationService.TargetConnections">
+          <NavigationPropertyBinding Path="targetSystem" Target="TargetSystems"/>
+        </EntitySet>
+        <EntitySet Name="TargetObjects" EntityType="MigrationService.TargetObjects">
+          <NavigationPropertyBinding Path="targetSystem" Target="TargetSystems"/>
+          <NavigationPropertyBinding Path="metadata" Target="TargetMetadata"/>
+        </EntitySet>
+        <EntitySet Name="TargetMetadata" EntityType="MigrationService.TargetMetadata">
+          <NavigationPropertyBinding Path="targetObject" Target="TargetObjects"/>
+          <NavigationPropertyBinding Path="fields" Target="TargetFields"/>
+        </EntitySet>
+        <EntitySet Name="TargetFields" EntityType="MigrationService.TargetFields">
+          <NavigationPropertyBinding Path="metadata" Target="TargetMetadata"/>
+        </EntitySet>
+        <ActionImport Name="testSourceConnection" Action="MigrationService.testSourceConnection"/>
+        <ActionImport Name="discoverSourceMetadata" Action="MigrationService.discoverSourceMetadata"/>
+        <ActionImport Name="ingestSourceData" Action="MigrationService.ingestSourceData"/>
+        <ActionImport Name="transformRawToCanonicalCustomer" Action="MigrationService.transformRawToCanonicalCustomer"/>
+        <ActionImport Name="profileData" Action="MigrationService.profileData"/>
+        <ActionImport Name="discoverTargetMetadata" Action="MigrationService.discoverTargetMetadata"/>
+        <ActionImport Name="analyzeMapping" Action="MigrationService.analyzeMapping"/>
+        <ActionImport Name="discoverAllSourceMetadata" Action="MigrationService.discoverAllSourceMetadata"/>
+      </EntityContainer>
+      <EntityType Name="MigrationRuns">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="runId" Type="Edm.String" MaxLength="50" Nullable="false"/>
+        <Property Name="sourceSystem" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="sourceType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="sourceInterface" Type="Edm.String" MaxLength="50"/>
+        <Property Name="targetSystem" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="targetType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="targetInterface" Type="Edm.String" MaxLength="50"/>
+        <Property Name="businessObject" Type="Edm.String" MaxLength="100"/>
+        <Property Name="status" Type="Edm.String" MaxLength="40" DefaultValue="CREATED"/>
+        <Property Name="currentStage" Type="Edm.String" MaxLength="50"/>
+        <Property Name="startedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="completedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="errorCode" Type="Edm.String" MaxLength="50"/>
+        <Property Name="errorMessage" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="SourceSystems">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="systemId" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="systemName" Type="Edm.String" MaxLength="200" Nullable="false"/>
+        <Property Name="systemType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="description" Type="Edm.String"/>
+        <Property Name="active" Type="Edm.Boolean" DefaultValue="true"/>
+        <NavigationProperty Name="connections" Type="Collection(MigrationService.SourceConnections)" Partner="sourceSystem">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+        <NavigationProperty Name="objects" Type="Collection(MigrationService.SourceObjects)" Partner="sourceSystem">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="SourceConnections">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="connectionId" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="connectionName" Type="Edm.String" MaxLength="200" Nullable="false"/>
+        <Property Name="interfaceType" Type="Edm.String" MaxLength="50" Nullable="false"/>
+        <Property Name="endpointReference" Type="Edm.String" MaxLength="500"/>
+        <Property Name="authenticationType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="adapterType" Type="Edm.String" MaxLength="100"/>
+        <Property Name="status" Type="Edm.String" MaxLength="40" DefaultValue="UNKNOWN"/>
+        <Property Name="discoveryPath" Type="Edm.String" MaxLength="255"/>
+        <Property Name="metadataEndpointReference" Type="Edm.String" MaxLength="100"/>
+        <Property Name="extractionEndpointReference" Type="Edm.String" MaxLength="100"/>
+        <Property Name="extractionPath" Type="Edm.String" MaxLength="255"/>
+        <Property Name="lastTestedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="errorCode" Type="Edm.String" MaxLength="50"/>
+        <Property Name="errorMessage" Type="Edm.String"/>
+        <NavigationProperty Name="sourceSystem" Type="MigrationService.SourceSystems" Nullable="false" Partner="connections">
+          <ReferentialConstraint Property="sourceSystem_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="sourceSystem_ID" Type="Edm.Guid" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="SourceObjects">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="objectId" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="objectName" Type="Edm.String" MaxLength="200" Nullable="false"/>
+        <Property Name="businessObject" Type="Edm.String" MaxLength="100"/>
+        <Property Name="objectType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="schemaVersion" Type="Edm.String" MaxLength="50"/>
+        <Property Name="description" Type="Edm.String"/>
+        <NavigationProperty Name="sourceSystem" Type="MigrationService.SourceSystems" Nullable="false" Partner="objects">
+          <ReferentialConstraint Property="sourceSystem_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="sourceSystem_ID" Type="Edm.Guid" Nullable="false"/>
+        <NavigationProperty Name="metadata" Type="Collection(MigrationService.SourceMetadata)" Partner="sourceObject">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="SourceMetadata">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="metadataId" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="schemaVersion" Type="Edm.String" MaxLength="50"/>
+        <Property Name="extractedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="recordCount" Type="Edm.Int64"/>
+        <Property Name="metadataStatus" Type="Edm.String" MaxLength="40"/>
+        <NavigationProperty Name="sourceObject" Type="MigrationService.SourceObjects" Nullable="false" Partner="metadata">
+          <ReferentialConstraint Property="sourceObject_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="sourceObject_ID" Type="Edm.Guid" Nullable="false"/>
+        <NavigationProperty Name="fields" Type="Collection(MigrationService.SourceFields)" Partner="metadata">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="SourceFields">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="fieldName" Type="Edm.String" MaxLength="200" Nullable="false"/>
+        <Property Name="objectName" Type="Edm.String" MaxLength="100"/>
+        <Property Name="dataType" Type="Edm.String" MaxLength="500"/>
+        <Property Name="length" Type="Edm.Int32"/>
+        <Property Name="precision" Type="Edm.Int32"/>
+        <Property Name="scale" Type="Edm.Int32"/>
+        <Property Name="nullable" Type="Edm.Boolean" DefaultValue="true"/>
+        <Property Name="description" Type="Edm.String"/>
+        <NavigationProperty Name="metadata" Type="MigrationService.SourceMetadata" Partner="fields">
+          <ReferentialConstraint Property="metadata_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="metadata_ID" Type="Edm.Guid"/>
+      </EntityType>
+      <EntityType Name="RawRecords">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="runId" Type="Edm.String" MaxLength="50"/>
+        <Property Name="batchId" Type="Edm.String" MaxLength="50"/>
+        <Property Name="sourceSystem" Type="Edm.String" MaxLength="100"/>
+        <Property Name="sourceType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="sourceInterface" Type="Edm.String" MaxLength="50"/>
+        <Property Name="sourceObject" Type="Edm.String" MaxLength="100"/>
+        <Property Name="schemaVersion" Type="Edm.String" MaxLength="50"/>
+        <Property Name="sourceKey" Type="Edm.String" MaxLength="100"/>
+        <Property Name="ingestionKey" Type="Edm.String" MaxLength="255"/>
+        <Property Name="extractedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="ingestedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="payload" Type="Edm.String"/>
+        <Property Name="processingStatus" Type="Edm.String" MaxLength="40"/>
+        <Property Name="errorCode" Type="Edm.String" MaxLength="50"/>
+        <Property Name="errorMessage" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="CanonicalCustomers">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="runId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="batchId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="sourceRecordId" Type="Edm.String" MaxLength="200"/>
+        <Property Name="sourceSystem" Type="Edm.String" MaxLength="100"/>
+        <Property Name="sourceObject" Type="Edm.String" MaxLength="100"/>
+        <Property Name="sourceKey" Type="Edm.String" MaxLength="100"/>
+        <Property Name="externalId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="customerNumber" Type="Edm.String" MaxLength="100"/>
+        <Property Name="name" Type="Edm.String" MaxLength="255"/>
+        <Property Name="address1" Type="Edm.String" MaxLength="255"/>
+        <Property Name="address2" Type="Edm.String" MaxLength="255"/>
+        <Property Name="city" Type="Edm.String" MaxLength="100"/>
+        <Property Name="postalCode" Type="Edm.String" MaxLength="50"/>
+        <Property Name="country" Type="Edm.String" MaxLength="10"/>
+        <Property Name="phone" Type="Edm.String" MaxLength="50"/>
+        <Property Name="email" Type="Edm.String" MaxLength="255"/>
+        <Property Name="processingStatus" Type="Edm.String" MaxLength="40"/>
+        <Property Name="canonicalPayload" Type="Edm.String"/>
+      </EntityType>
+      <EntityType Name="TargetSystems">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="systemId" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="systemName" Type="Edm.String" MaxLength="200" Nullable="false"/>
+        <Property Name="systemType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="description" Type="Edm.String"/>
+        <Property Name="active" Type="Edm.Boolean" DefaultValue="true"/>
+        <NavigationProperty Name="connections" Type="Collection(MigrationService.TargetConnections)" Partner="targetSystem">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+        <NavigationProperty Name="objects" Type="Collection(MigrationService.TargetObjects)" Partner="targetSystem">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="TargetConnections">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="connectionId" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="connectionName" Type="Edm.String" MaxLength="200" Nullable="false"/>
+        <Property Name="interfaceType" Type="Edm.String" MaxLength="50" Nullable="false"/>
+        <Property Name="endpointReference" Type="Edm.String" MaxLength="500"/>
+        <Property Name="authenticationType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="adapterType" Type="Edm.String" MaxLength="100"/>
+        <Property Name="status" Type="Edm.String" MaxLength="40" DefaultValue="UNKNOWN"/>
+        <Property Name="lastTestedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="errorCode" Type="Edm.String" MaxLength="50"/>
+        <Property Name="errorMessage" Type="Edm.String"/>
+        <NavigationProperty Name="targetSystem" Type="MigrationService.TargetSystems" Nullable="false" Partner="connections">
+          <ReferentialConstraint Property="targetSystem_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="targetSystem_ID" Type="Edm.Guid" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="TargetObjects">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="objectId" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="objectName" Type="Edm.String" MaxLength="200" Nullable="false"/>
+        <Property Name="businessObject" Type="Edm.String" MaxLength="100"/>
+        <Property Name="objectType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="schemaVersion" Type="Edm.String" MaxLength="50"/>
+        <Property Name="description" Type="Edm.String"/>
+        <NavigationProperty Name="targetSystem" Type="MigrationService.TargetSystems" Nullable="false" Partner="objects">
+          <ReferentialConstraint Property="targetSystem_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="targetSystem_ID" Type="Edm.Guid" Nullable="false"/>
+        <NavigationProperty Name="metadata" Type="Collection(MigrationService.TargetMetadata)" Partner="targetObject">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="TargetMetadata">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="metadataId" Type="Edm.String" MaxLength="100" Nullable="false"/>
+        <Property Name="schemaVersion" Type="Edm.String" MaxLength="50"/>
+        <Property Name="extractedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="recordCount" Type="Edm.Int64"/>
+        <Property Name="metadataStatus" Type="Edm.String" MaxLength="40"/>
+        <Property Name="resourceId" Type="Edm.String" MaxLength="200"/>
+        <Property Name="resourceName" Type="Edm.String" MaxLength="200"/>
+        <Property Name="resourceType" Type="Edm.String" MaxLength="100"/>
+        <NavigationProperty Name="targetObject" Type="MigrationService.TargetObjects" Nullable="false" Partner="metadata">
+          <ReferentialConstraint Property="targetObject_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="targetObject_ID" Type="Edm.Guid" Nullable="false"/>
+        <NavigationProperty Name="fields" Type="Collection(MigrationService.TargetFields)" Partner="metadata">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="TargetFields">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="fieldName" Type="Edm.String" MaxLength="200" Nullable="false"/>
+        <Property Name="dataType" Type="Edm.String" MaxLength="500"/>
+        <Property Name="length" Type="Edm.Int32"/>
+        <Property Name="precision" Type="Edm.Int32"/>
+        <Property Name="scale" Type="Edm.Int32"/>
+        <Property Name="nullable" Type="Edm.Boolean" DefaultValue="true"/>
+        <Property Name="mandatory" Type="Edm.Boolean" DefaultValue="false"/>
+        <Property Name="semanticType" Type="Edm.String" MaxLength="100"/>
+        <Property Name="description" Type="Edm.String"/>
+        <NavigationProperty Name="metadata" Type="MigrationService.TargetMetadata" Partner="fields">
+          <ReferentialConstraint Property="metadata_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="metadata_ID" Type="Edm.Guid"/>
+      </EntityType>
+      <ComplexType Name="ConnectivityResult">
+        <Property Name="connectionId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="sourceSystem" Type="Edm.String" MaxLength="100"/>
+        <Property Name="interfaceType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="adapterType" Type="Edm.String" MaxLength="100"/>
+        <Property Name="authenticationType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="status" Type="Edm.String" MaxLength="40"/>
+        <Property Name="testedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="message" Type="Edm.String" MaxLength="500"/>
+      </ComplexType>
+      <ComplexType Name="SourceMetadataResult">
+        <Property Name="connectionId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="sourceSystem" Type="Edm.String" MaxLength="100"/>
+        <Property Name="systemType" Type="Edm.String" MaxLength="100"/>
+        <Property Name="interfaceType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="adapterType" Type="Edm.String" MaxLength="100"/>
+        <Property Name="status" Type="Edm.String" MaxLength="40"/>
+        <Property Name="metadataVersion" Type="Edm.String" MaxLength="40"/>
+        <Property Name="discoveredAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="objectsDiscovered" Type="Edm.Int32"/>
+        <Property Name="message" Type="Edm.String" MaxLength="500"/>
+      </ComplexType>
+      <ComplexType Name="IngestionResult">
+        <Property Name="runId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="batchId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="connectionId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="sourceSystem" Type="Edm.String" MaxLength="100"/>
+        <Property Name="sourceType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="sourceInterface" Type="Edm.String" MaxLength="50"/>
+        <Property Name="sourceObject" Type="Edm.String" MaxLength="200"/>
+        <Property Name="schemaVersion" Type="Edm.String" MaxLength="50"/>
+        <Property Name="status" Type="Edm.String" MaxLength="40"/>
+        <Property Name="extractedCount" Type="Edm.Int32"/>
+        <Property Name="ingestedCount" Type="Edm.Int32"/>
+        <Property Name="duplicateCount" Type="Edm.Int32"/>
+        <Property Name="failedCount" Type="Edm.Int32"/>
+        <Property Name="extractedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="message" Type="Edm.String" MaxLength="500"/>
+      </ComplexType>
+      <ComplexType Name="ProfilingResult">
+        <Property Name="runId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="batchId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="sourceObject" Type="Edm.String" MaxLength="200"/>
+        <Property Name="totalRecords" Type="Edm.Int32"/>
+        <Property Name="completeRecords" Type="Edm.Int32"/>
+        <Property Name="incompleteRecords" Type="Edm.Int32"/>
+        <Property Name="duplicateSourceKeys" Type="Edm.Int32"/>
+        <Property Name="invalidEmailCount" Type="Edm.Int32"/>
+        <Property Name="missingFieldCount" Type="Edm.Int32"/>
+        <Property Name="qualityScore" Type="Edm.Decimal" Precision="5" Scale="2"/>
+        <Property Name="status" Type="Edm.String" MaxLength="40"/>
+        <Property Name="profiledAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="message" Type="Edm.String" MaxLength="1000"/>
+      </ComplexType>
+      <ComplexType Name="CanonicalizationResult">
+        <Property Name="runId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="batchId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="sourceObject" Type="Edm.String" MaxLength="200"/>
+        <Property Name="extractedCount" Type="Edm.Int32"/>
+        <Property Name="canonicalizedCount" Type="Edm.Int32"/>
+        <Property Name="duplicateCount" Type="Edm.Int32"/>
+        <Property Name="failedCount" Type="Edm.Int32"/>
+        <Property Name="status" Type="Edm.String" MaxLength="40"/>
+        <Property Name="canonicalizedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="message" Type="Edm.String" MaxLength="500"/>
+      </ComplexType>
+      <ComplexType Name="TargetMetadataResult">
+        <Property Name="runId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="targetSystem" Type="Edm.String" MaxLength="100"/>
+        <Property Name="targetType" Type="Edm.String" MaxLength="50"/>
+        <Property Name="targetInterface" Type="Edm.String" MaxLength="50"/>
+        <Property Name="targetObject" Type="Edm.String" MaxLength="200"/>
+        <Property Name="status" Type="Edm.String" MaxLength="40"/>
+        <Property Name="metadataVersion" Type="Edm.String" MaxLength="50"/>
+        <Property Name="objectsDiscovered" Type="Edm.Int32"/>
+        <Property Name="fieldsDiscovered" Type="Edm.Int32"/>
+        <Property Name="discoveredAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="message" Type="Edm.String" MaxLength="1000"/>
+      </ComplexType>
+      <ComplexType Name="MappingAnalysisResult">
+        <Property Name="runId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="batchId" Type="Edm.String" MaxLength="100"/>
+        <Property Name="sourceObject" Type="Edm.String" MaxLength="200"/>
+        <Property Name="targetObject" Type="Edm.String" MaxLength="200"/>
+        <Property Name="status" Type="Edm.String" MaxLength="40"/>
+        <Property Name="mappings" Type="Edm.String"/>
+        <Property Name="mappingCount" Type="Edm.Int32"/>
+        <Property Name="highConfidenceCount" Type="Edm.Int32"/>
+        <Property Name="approvalRequiredCount" Type="Edm.Int32"/>
+        <Property Name="analyzedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="message" Type="Edm.String" MaxLength="1000"/>
+      </ComplexType>
+      <Action Name="testSourceConnection" IsBound="false">
+        <Parameter Name="connectionId" Type="Edm.String" MaxLength="100"/>
+        <ReturnType Type="MigrationService.ConnectivityResult"/>
+      </Action>
+      <Action Name="discoverSourceMetadata" IsBound="false">
+        <Parameter Name="connectionId" Type="Edm.String" MaxLength="100"/>
+        <Parameter Name="objectName" Type="Edm.String"/>
+        <Parameter Name="entityName" Type="Edm.String"/>
+        <ReturnType Type="MigrationService.SourceMetadataResult"/>
+      </Action>
+      <Action Name="ingestSourceData" IsBound="false">
+        <Parameter Name="connectionId" Type="Edm.String" MaxLength="100"/>
+        <Parameter Name="objectName" Type="Edm.String" MaxLength="200"/>
+        <Parameter Name="runId" Type="Edm.String" MaxLength="100"/>
+        <Parameter Name="batchId" Type="Edm.String" MaxLength="100"/>
+        <ReturnType Type="MigrationService.IngestionResult"/>
+      </Action>
+      <Action Name="transformRawToCanonicalCustomer" IsBound="false">
+        <Parameter Name="runId" Type="Edm.String" MaxLength="100"/>
+        <Parameter Name="batchId" Type="Edm.String" MaxLength="100"/>
+        <Parameter Name="sourceObject" Type="Edm.String" MaxLength="200"/>
+        <ReturnType Type="MigrationService.CanonicalizationResult"/>
+      </Action>
+      <Action Name="profileData" IsBound="false">
+        <Parameter Name="runId" Type="Edm.String" MaxLength="100"/>
+        <Parameter Name="batchId" Type="Edm.String" MaxLength="100"/>
+        <Parameter Name="sourceObject" Type="Edm.String" MaxLength="200"/>
+        <ReturnType Type="MigrationService.ProfilingResult"/>
+      </Action>
+      <Action Name="discoverTargetMetadata" IsBound="false">
+        <Parameter Name="runId" Type="Edm.String" MaxLength="100"/>
+        <ReturnType Type="MigrationService.TargetMetadataResult"/>
+      </Action>
+      <Action Name="analyzeMapping" IsBound="false">
+        <Parameter Name="runId" Type="Edm.String" MaxLength="100"/>
+        <Parameter Name="batchId" Type="Edm.String" MaxLength="100"/>
+        <Parameter Name="sourceObject" Type="Edm.String" MaxLength="200"/>
+        <ReturnType Type="MigrationService.MappingAnalysisResult"/>
+      </Action>
+      <Action Name="discoverAllSourceMetadata" IsBound="false">
+        <Parameter Name="connectionId" Type="Edm.String" MaxLength="100"/>
+        <ReturnType Type="Edm.String"/>
+      </Action>
+      <Annotations Target="MigrationService.MigrationRuns/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="MigrationService.MigrationRuns/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.MigrationRuns/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.MigrationRuns/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.MigrationRuns/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceSystems/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceSystems/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceSystems/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceSystems/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceSystems/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceConnections/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceConnections/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceConnections/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceConnections/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceConnections/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceObjects/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceObjects/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceObjects/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceObjects/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceObjects/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceMetadata/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceMetadata/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceMetadata/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceMetadata/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceMetadata/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.SourceFields/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="MigrationService.EntityContainer/RawRecords">
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Insertable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Updatable" Bool="false"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="MigrationService.RawRecords/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="MigrationService.RawRecords/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.RawRecords/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.RawRecords/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.RawRecords/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.EntityContainer/CanonicalCustomers">
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Insertable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Updatable" Bool="false"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="MigrationService.CanonicalCustomers/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="MigrationService.CanonicalCustomers/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.CanonicalCustomers/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.CanonicalCustomers/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.CanonicalCustomers/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetSystems/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetSystems/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetSystems/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetSystems/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetSystems/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetConnections/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetConnections/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetConnections/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetConnections/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetConnections/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetObjects/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetObjects/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetObjects/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetObjects/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetObjects/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetMetadata/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetMetadata/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetMetadata/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>CreatedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetMetadata/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedAt}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetMetadata/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="{i18n>UserID.Description}"/>
+        <Annotation Term="Common.Label" String="{i18n>ChangedBy}"/>
+      </Annotations>
+      <Annotations Target="MigrationService.TargetFields/ID">
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

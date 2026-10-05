@@ -1,0 +1,145 @@
+{
+  "_version": "1.59.0",
+  "sap.app": {
+    "id": "migration.storedfiles",
+    "type": "application",
+    "title": "Stored Files",
+    "description": "Files in the Object Store (or local folder): preview runs, raw extracts, target rows",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/framework/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    },
+    "i18n": "i18n/i18n.properties"
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.fe.templates": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      }
+    },
+    "routing": {
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "FoldersList",
+          "target": "FoldersList"
+        },
+        {
+          "pattern": "StorageFolders({key}):?query:",
+          "name": "FolderPage",
+          "target": "FolderPage"
+        },
+        {
+          "pattern": "StorageFolders({key})/files({key2}):?query:",
+          "name": "FilePage",
+          "target": "FilePage"
+        }
+      ],
+      "targets": {
+        "FoldersList": {
+          "type": "Component",
+          "id": "FoldersList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "contextPath": "/StorageFolders",
+              "initialLoad": "Enabled",
+              "variantManagement": "None",
+              "hideFilterBar": true,
+              "navigation": {
+                "StorageFolders": {
+                  "detail": {
+                    "route": "FolderPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "FolderPage": {
+          "type": "Component",
+          "id": "FolderPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/StorageFolders",
+              "navigation": {
+                "files": {
+                  "detail": {
+                    "route": "FilePage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "files/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "FilePage": {
+          "type": "Component",
+          "id": "FilePage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/StorageFolders/files"
+            }
+          }
+        }
+      }
+    }
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "migrationorchestrator.service"
+  }
+}

@@ -1,0 +1,709 @@
+<mvc:View
+    controllerName="project1.controller.CatalogView"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    displayBlock="true">
+
+    <App id="app">
+
+        <!-- ================================================== -->
+        <!-- PAGE 1: SERVICE CATALOG                            -->
+        <!-- ================================================== -->
+
+        <Page
+            showHeader="false"
+            id="serviceCatalogPage"
+            title="S/4HANA Public Cloud OData Service Catalog">
+            <content>
+            
+                <VBox
+                    width="100%"
+                    class="sapUiMediumMargin">
+
+                    <Title
+                        text="Available OData Services"
+                        level="H2"
+                        class="sapUiSmallMarginBottom"/>
+
+                    <SearchField
+                        id="serviceSearchField"
+                        width="30rem"
+                        placeholder="Search Service Name or Description"
+                        liveChange=".onSearch"
+                        search=".onSearch"
+                        class="sapUiSmallMarginBottom"/>
+
+                    <Table
+                        id="serviceTable"
+                        width="100%"
+                        items="{catalog>/services}"
+                        growing="true"
+                        growingThreshold="50"
+                        noDataText="No S/4HANA services found">
+
+                        <headerToolbar>
+                            <OverflowToolbar>
+
+                                <Title
+                                    text="Service Catalog"
+                                    level="H3"/>
+
+                                <ToolbarSpacer/>
+
+                                <Button
+                                    text="Refresh"
+                                    icon="sap-icon://refresh"
+                                    press=".onRefresh"/>
+
+                            </OverflowToolbar>
+                        </headerToolbar>
+
+                        <columns>
+
+                            <Column width="20rem">
+                                <Text text="Technical Service Name"/>
+                            </Column>
+
+                            <Column
+                                width="7rem"
+                                hAlign="Center">
+                                <Text text="Version"/>
+                            </Column>
+
+                            <Column>
+                                <Text text="Description"/>
+                            </Column>
+
+                            <Column width="28rem">
+                                <Text text="Service URL"/>
+                            </Column>
+
+                        </columns>
+
+                        <items>
+
+                            <ColumnListItem>
+
+                                <cells>
+
+                                    <Link
+                                        text="{catalog>TechnicalServiceName}"
+                                        press=".onServicePress"/>
+
+                                    <Text
+                                        text="{catalog>TechnicalServiceVersion}"/>
+
+                                    <Text
+                                        text="{catalog>Description}"
+                                        wrapping="true"/>
+
+                                    <Text
+                                        text="{catalog>ServiceUrl}"
+                                        wrapping="true"/>
+
+                                </cells>
+
+                            </ColumnListItem>
+
+                        </items>
+
+                    </Table>
+
+                </VBox>
+
+            </content>
+
+        </Page>
+
+
+        <!-- ================================================== -->
+        <!-- PAGE 2: METADATA                                   -->
+        <!-- ================================================== -->
+
+        <Page
+            id="metadataPage"
+            title="OData Service Metadata"
+            showNavButton="true"
+            navButtonPress=".onMetadataBack">
+<customHeader>
+
+            <Bar>
+
+                <contentLeft>
+
+                    <Button
+                        icon="sap-icon://nav-back"
+                        type="Transparent"
+                        press=".onBack"/>
+
+                    <Title
+                        text="{metadata>/ServiceName}"
+                        level="H2"/>
+
+                </contentLeft>
+
+                <contentRight>
+
+                    <Button
+                    text="Continue to Data Profiling"
+                    icon="sap-icon://navigation-right-arrow"
+                    type="Emphasized"
+                    press=".onContinueToData"/>
+
+                
+                </contentRight>
+
+            </Bar>
+
+        </customHeader>
+            <content>
+
+                <VBox
+                    width="100%"
+                    class="sapUiMediumMargin" visible="true">
+
+                    <!-- ======================================= -->
+                    <!-- SERVICE DETAILS                         -->
+                    <!-- ======================================= -->
+
+                    <ObjectHeader visible="false"
+                        title="{metadata>/ServiceName}"
+                        intro="">
+
+                        <!-- <attributes>
+
+                            <ObjectAttribute
+                                title="Service URL"
+                                text="{metadata>/ServiceUrl}"/>
+
+                        </attributes> -->
+
+                        <!-- <statuses>
+
+                            <ObjectStatus
+                                text="Metadata Loaded"
+                                state="Success"
+                                icon="sap-icon://accept"/>
+
+                        </statuses> -->
+
+                    </ObjectHeader>
+
+
+                    <!-- Debug counts. These are useful while testing. -->
+
+                    <HBox
+                        class="sapUiSmallMarginTop sapUiSmallMarginBottom">
+
+                        <ObjectStatus
+                            title="Entity Sets"
+                            text="{metadata>/EntitySetCount}"
+                            state="Information"
+                            class="sapUiSmallMarginEnd"/>
+
+                        <ObjectStatus
+                            title="Properties"
+                            text="{metadata>/PropertyCount}"
+                            state="Information"
+                            class="sapUiSmallMarginEnd"/>
+
+                        <ObjectStatus
+                            title="Navigation"
+                            text="{metadata>/NavigationCount}"
+                            state="Information"/>                            
+
+
+                    </HBox>
+                    
+                    
+
+
+                    <!-- ======================================= -->
+                    <!-- ICON TAB BAR                            -->
+                    <!-- ======================================= -->
+
+                    <IconTabBar
+                        id="metadataTabBar"
+                       
+                        selectedKey="entitySets"
+                        expandable="false">
+
+                        <items>
+
+
+                            <!-- ================================= -->
+                            <!-- ENTITY SETS TAB                   -->
+                            <!-- ================================= -->
+
+                            <IconTabFilter
+                                key="entitySets"
+                                text="Entity Sets"
+                                count="{metadata>/EntitySetCount}"
+                                icon="sap-icon://table-view">
+
+                                <VBox
+                                    width="100%"
+                                    class="sapUiSmallMarginTop">
+
+                                    <SearchField
+                                        id="entitySearchField"
+                                        width="30rem"
+                                        placeholder="Search Entity Set, Description or Type"
+                                        liveChange=".onEntitySearch"
+                                        search=".onEntitySearch"
+                                        class="sapUiSmallMarginBottom"/>
+
+                                    <Table
+                                        id="entitySetTable"
+                                        width="100%"
+                                        items="{metadata>/EntitySets}"
+                                        growing="true"
+                                        growingThreshold="100"
+                                        noDataText="No Entity Sets found">
+
+                                        <columns>
+
+                                            <Column width="20rem">
+                                                <Text text="Entity Set"/>
+                                            </Column>
+
+                                            <Column
+                                                width="8rem"
+                                                hAlign="Center">
+
+                                                <Text text="Data"/>
+
+                                            </Column>
+
+                                            <Column width="20rem">
+                                                <Text text="Description"/>
+                                            </Column>
+
+                                            <Column>
+                                                <Text text="Entity Type"/>
+                                            </Column>
+
+                                            <Column
+                                                width="6rem"
+                                                hAlign="Center">
+                                                <Text text="Create"/>
+                                            </Column>
+
+                                            <Column
+                                                width="6rem"
+                                                hAlign="Center">
+                                                <Text text="Update"/>
+                                            </Column>
+
+                                            <Column
+                                                width="6rem"
+                                                hAlign="Center">
+                                                <Text text="Delete"/>
+                                            </Column>
+
+                                            <Column
+                                                width="6rem"
+                                                hAlign="Center">
+                                                <Text text="Search"/>
+                                            </Column>
+
+                                        </columns>
+
+                                        <items>
+
+                                            <ColumnListItem>
+
+                                                <cells>
+
+                                                    <Link
+                                                        text="{metadata>EntitySetName}" press=".onEntitySetPress"/>
+
+                                                    <Link
+                                                        text="Show Data"
+                                                       
+                                                        press=".onViewEntityData"/>
+                                                    <Text
+                                                        text="{metadata>Description}"
+                                                        wrapping="true"/>
+
+                                                    <Text
+                                                        text="{metadata>EntityType}"
+                                                        wrapping="true"/>
+
+                                                    <CheckBox
+                                                        selected="{metadata>Creatable}"
+                                                        editable="false"/>
+
+                                                    <CheckBox
+                                                        selected="{metadata>Updatable}"
+                                                        editable="false"/>
+
+                                                    <CheckBox
+                                                        selected="{metadata>Deletable}"
+                                                        editable="false"/>
+
+                                                    <CheckBox
+                                                        selected="{metadata>Searchable}"
+                                                        editable="false"/>
+
+                                                </cells>
+
+                                            </ColumnListItem>
+
+                                        </items>
+
+                                    </Table>
+
+                                </VBox>
+
+                            </IconTabFilter>
+
+
+                            <!-- ================================= -->
+                            <!-- PROPERTIES TAB                    -->
+                            <!-- ================================= -->
+
+                            <!-- <IconTabFilter
+                                key="properties"
+                                text="Properties"
+                                count="{metadata>/PropertyCount}"
+                                icon="sap-icon://list">
+
+                                <VBox
+                                    width="100%"
+                                    class="sapUiSmallMarginTop">
+
+                                    <SearchField
+                                        id="propertySearchField"
+                                        width="30rem"
+                                        placeholder="Search Entity, Property or Type"
+                                        liveChange=".onPropertySearch"
+                                        search=".onPropertySearch"
+                                        class="sapUiSmallMarginBottom"/> -->
+                                    <IconTabFilter
+    key="properties"
+    text="Properties"
+    count="{metadata>/SelectedPropertyCount}"
+    icon="sap-icon://list">
+
+    <VBox
+        width="100%"
+        class="sapUiSmallMarginTop">
+
+        <MessageStrip
+            text="Showing properties for Entity Set: {metadata>/SelectedEntitySet}"
+            type="Information"
+            showIcon="true"
+            class="sapUiSmallMarginBottom"/>
+
+        <HBox
+            class="sapUiSmallMarginBottom">
+
+            <ObjectStatus
+                title="Entity Set"
+                text="{metadata>/SelectedEntitySet}"
+                state="Information"
+                class="sapUiSmallMarginEnd"/>
+
+            <ObjectStatus
+                title="Entity Type"
+                text="{metadata>/SelectedEntityType}"
+                state="Information"
+                class="sapUiSmallMarginEnd"/>
+
+            <ObjectStatus
+                title="Properties"
+                text="{metadata>/SelectedPropertyCount}"
+                state="Success"/>
+
+        </HBox>
+
+        <SearchField
+            id="propertySearchField"
+            width="30rem"
+            placeholder="Search selected Entity Set properties"
+            liveChange=".onPropertySearch"
+            search=".onPropertySearch"
+            class="sapUiSmallMarginBottom"/>
+
+                                    <Table
+                                        id="propertiesTable"
+                                        width="100%"
+                                        items="{metadata>/Properties}"
+                                        growing="true"
+                                        growingThreshold="100"
+                                        noDataText="No properties found">
+
+                                        <columns>
+
+                                            <Column width="20rem">
+                                                <Text text="Entity"/>
+                                            </Column>
+
+                                            <Column width="20rem">
+                                                <Text text="Property"/>
+                                            </Column>
+
+                                            <Column width="15rem">
+                                                <Text text="OData Type"/>
+                                            </Column>
+
+                                            <Column
+                                                width="6rem"
+                                                hAlign="Center">
+                                                <Text text="Key"/>
+                                            </Column>
+
+                                            <Column
+                                                width="8rem"
+                                                hAlign="Center">
+                                                <Text text="Nullable"/>
+                                            </Column>
+
+                                            <Column
+                                                width="10rem"
+                                                hAlign="Center">
+                                                <Text text="Max Length"/>
+                                            </Column>
+
+                                        </columns>
+
+                                        <items>
+
+                                            <ColumnListItem>
+
+                                                <cells>
+
+                                                    <Text
+                                                        text="{metadata>EntityName}"
+                                                        wrapping="true"/>
+
+                                                    <ObjectIdentifier
+                                                        title="{metadata>PropertyName}"/>
+
+                                                    <Text
+                                                        text="{metadata>Type}"/>
+
+                                                    <CheckBox
+                                                        selected="{metadata>IsKey}"
+                                                        editable="false"/>
+
+                                                    <CheckBox
+                                                        selected="{metadata>Nullable}"
+                                                        editable="false"/>
+
+                                                    <Text
+                                                        text="{metadata>MaxLength}"/>
+
+                                                </cells>
+
+                                            </ColumnListItem>
+
+                                        </items>
+
+                                    </Table>
+
+                                </VBox>
+
+                            </IconTabFilter>
+
+                            <!--Show Data-->
+                            <IconTabFilter
+    key="entityData"
+    text="Entity Data"
+    count="{metadata>/EntityDataCount}"
+    icon="sap-icon://database">
+
+    <VBox
+        width="100%"
+        class="sapUiSmallMarginTop">
+
+        <Title
+            text="{= ${metadata>/SelectedEntitySet}
+                ? 'Data from ' + ${metadata>/SelectedEntitySet}
+                : 'Entity Set Data' }"
+            level="H3"
+            class="sapUiSmallMarginBottom"/>
+
+
+        <HBox
+            alignItems="Center"
+            class="sapUiSmallMarginBottom">
+
+            <ObjectStatus
+                title="Entity Set"
+                text="{metadata>/SelectedEntitySet}"
+                state="Information"
+                class="sapUiSmallMarginEnd"/>
+
+            <ObjectStatus
+                title="Records"
+                text="{metadata>/EntityDataCount}"
+                state="Success"/>
+
+        </HBox>
+
+
+        <MessageStrip
+            text="Showing up to 20 live records retrieved from SAP S/4HANA Public Cloud."
+            type="Information"
+            showIcon="true"
+            class="sapUiSmallMarginBottom"/>
+
+
+        <!-- Dynamic columns and rows will be created by controller -->
+    <ScrollContainer
+id="entityDataScrollContainer"
+width="100%"
+horizontal="true"
+vertical="true"
+focusable="true">
+        <Table
+            id="entityDataTable"
+            width="120rem"
+            fixedLayout="true"
+            growing="true"
+            growingThreshold="200"
+            growingScrollToLoad="true"
+            noDataText="Select an Entity Set and choose View Data"/>
+            </ScrollContainer>
+            <HBox
+    width="100%"
+    justifyContent="Center"
+    class="sapUiMediumMarginTop">
+
+    <Button
+        text="Load More"
+        icon="sap-icon://slim-arrow-down"
+        type="Emphasized"
+        visible="{metadata>/EntityDataHasMore}"
+        enabled="{= !${metadata>/EntityDataLoading} }"
+        press=".onLoadMoreEntityData"/>
+
+</HBox>
+
+    </VBox>
+
+</IconTabFilter>
+                            <!-- Show Data-->
+                            <!-- ================================= -->
+                            <!-- NAVIGATION PROPERTIES TAB         -->
+                            <!-- ================================= -->
+
+                            <IconTabFilter
+                                key="navigation"
+                                text="Navigation Properties"
+                                count="{metadata>/NavigationCount}"
+                                icon="sap-icon://connected" visible="false">
+
+                                <VBox
+                                    width="100%"
+                                    class="sapUiSmallMarginTop">
+
+                                    <SearchField
+                                        id="navigationSearchField"
+                                        width="30rem"
+                                        placeholder="Search Entity or Navigation Property"
+                                        liveChange=".onNavigationSearch"
+                                        search=".onNavigationSearch"
+                                        class="sapUiSmallMarginBottom"/>
+
+                                    <Table
+                                        id="navigationTable"
+                                        width="100%"
+                                        items="{metadata>/NavigationProperties}"
+                                        growing="true"
+                                        growingThreshold="100"
+                                        noDataText="No Navigation Properties found">
+
+                                        <columns>
+
+                                            <Column width="20rem">
+                                                <Text text="Entity"/>
+                                            </Column>
+
+                                            <Column width="25rem">
+                                                <Text text="Navigation Property"/>
+                                            </Column>
+
+                                            <Column>
+                                                <Text text="Relationship / Type"/>
+                                            </Column>
+
+                                        </columns>
+
+                                        <items>
+
+                                            <ColumnListItem>
+
+                                                <cells>
+
+                                                    <Text
+                                                        text="{metadata>EntityName}"
+                                                        wrapping="true"/>
+
+                                                    <ObjectIdentifier
+                                                        title="{metadata>NavigationProperty}"/>
+
+                                                    <Text
+                                                        text="{metadata>Relationship}"
+                                                        wrapping="true"/>
+
+                                                </cells>
+
+                                            </ColumnListItem>
+
+                                        </items>
+
+                                    </Table>
+
+                                </VBox>
+
+                            </IconTabFilter>
+
+                        </items>
+
+                    </IconTabBar>
+
+                </VBox>
+                 <HBox
+                justifyContent="End"
+                class="migrationActionContainer">
+               <Button
+                    text="Back"
+                    type="Transparent"
+                    press=".onBack"/>
+                <Button
+                    text="Continue to Data Profiling"
+                    icon="sap-icon://navigation-right-arrow"
+                    type="Emphasized"
+                    press=".onContinueToData"/>
+            </HBox>
+
+            </content>
+
+            <footer>
+
+                <OverflowToolbar>
+
+                    <ObjectStatus
+                        text="{metadata>/ServiceName}"
+                        icon="sap-icon://cloud"/>
+
+                    <ToolbarSpacer/>
+
+                    <Button
+                        text="Back to Services"
+                        icon="sap-icon://nav-back"
+                        press=".onMetadataBack" visible="false"/>
+
+                        
+                </OverflowToolbar>
+
+            </footer>
+
+        </Page>
+
+    </App>
+
+</mvc:View>

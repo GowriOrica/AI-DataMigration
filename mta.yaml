@@ -1,0 +1,148 @@
+_schema-version: 3.3.0
+ID: migration-orchestrator
+description: AI Migration Framework - Governed Migration Orchestrator
+version: 1.0.0
+modules:
+- name: migration-orchestrator-db-deployer
+  type: hdb
+  path: gen/db
+  requires:
+  - name: migration-orchestrator-hdi
+- name: migration-orchestrator-srv
+  type: nodejs
+  path: gen/srv
+  requires:
+  - name: migration-orchestrator-hdi
+  - name: migration-orchestrator-auth
+  - name: migration-orchestrator-destination-service
+  - name: migration-objectstore
+  provides:
+  - name: srv-api
+    properties:
+      srv-url: ${default-url}
+  parameters:
+    buildpack: nodejs_buildpack
+    instances: 1
+  build-parameters:
+    builder: npm-ci
+# Opens the UI from the HTML5 app repository and forwards /migration to the backend (srv-api). No login, no Work Zone.
+- name: migration-orchestrator-approuter
+  type: approuter.nodejs
+  path: approuter
+  parameters:
+    disk-quota: 256M
+    memory: 256M
+  requires:
+  - name: srv-api
+    group: destinations
+    properties:
+      name: srv-api
+      url: ~{srv-url}
+      timeout: 300000   # ms; the default of 30 s cuts a sorting round, which takes 30 to 90 s
+  - name: migration-orchestrator-html5-runtime
+# Uploads the UI (project1.zip) to the HTML5 app repository and creates the destination srv-api
+# (the route of the UI to the backend). Same as the content deployer of "cds add html5-repo".
+- name: migration-orchestrator-app-content
+  type: com.sap.application.content
+  path: .
+  requires:
+  - name: srv-api
+  - name: migration-orchestrator-repo-host
+    parameters:
+      content-target: true
+      config:
+        HTML5Runtime_enabled: true
+  parameters:
+    config:
+      destinations:
+      - Name: srv-api
+        URL: ~{srv-api/srv-url}
+        Authentication: NoAuthentication
+        Type: HTTP
+        ProxyType: Internet
+        HTML5.ForwardAuthToken: true
+        HTML5.DynamicDestination: true
+        HTML5.Timeout: 300000
+  build-parameters:
+    build-result: resources
+    requires:
+    - artifacts:
+      - project1.zip
+      name: project1
+      target-path: resources/
+- name: project1
+  type: html5
+  path: app/project1
+  build-parameters:
+    build-result: dist
+    builder: custom
+    commands:
+    - npm install
+    - npm run build:cf
+    supported-platforms: []
+resources:
+- name: migration-orchestrator-hdi
+  type: org.cloudfoundry.existing-service
+  parameters:
+    service-name: migration-orchestrator-hdi
+# Object Store credentials (user-provided service, tag "objectstore").
+# Trial: holds a key of the company Object Store; the app finds it by tag.
+- name: migration-objectstore
+  type: org.cloudfoundry.existing-service
+  parameters:
+    service-name: migration-objectstore
+- name: migration-orchestrator-auth
+  type: org.cloudfoundry.managed-service
+  parameters:
+    config:
+      oauth2-configuration:
+        credential-types:
+        - binding-secret
+        - x509
+      tenant-mode: dedicated
+      xsappname: migration-orchestrator
+    path: ./xs-security.json
+    service: xsuaa
+    service-plan: application
+- name: migration-orchestrator-repo-host
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: migration-orchestrator-html5-service
+    service-plan: app-host
+# lets the approuter read the UI from the HTML5 repository
+- name: migration-orchestrator-html5-runtime
+  type: org.cloudfoundry.managed-service
+  parameters:
+    service: html5-apps-repo
+    service-name: migration-orchestrator-html5-runtime
+    service-plan: app-runtime
+- name: migration-orchestrator-destination-service
+  type: org.cloudfoundry.managed-service
+  requires:
+  - name: srv-api
+  parameters:
+    config:
+      HTML5Runtime_enabled: true
+      init_data:
+        instance:
+          destinations:
+          - Authentication: NoAuthentication
+            Name: ui5
+            ProxyType: Internet
+            Type: HTTP
+            URL: https://ui5.sap.com
+          existing_destinations_policy: update
+      version: 1.0.0
+    service: destination
+    service-name: migration-orchestrator-destination-service
+    service-plan: lite
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+  - builder: custom
+    commands:
+    - npm ci
+    - npx cds build --production

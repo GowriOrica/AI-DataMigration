@@ -1,0 +1,214 @@
+<mvc:View
+    controllerName="project1.controller.View1"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page
+        showHeader="false"
+        id="page"
+        class="migrationPage">
+
+
+        <content>
+            <OverflowToolbar style="Clear">
+                <ToolbarSpacer/>
+                <Button icon="sap-icon://refresh" text="Refresh" type="Transparent" press=".onRefresh"/>
+            </OverflowToolbar>
+
+            <!-- HERO SECTION -->
+            <VBox class="heroSection">
+                <Title
+                    text="AI Migration Framework"
+                    level="H1"
+                    class="heroTitle"/>
+                <Text
+                    text="Intelligent &amp; Governed &amp; Traceable"
+                    class="heroSubtitle"/>
+                <Text
+                    text="Discover, understand and prepare enterprise data migrations with AI."
+                    class="heroDescription"/>
+            </VBox>
+
+            <!-- KPI SECTION -->
+            <HBox class="kpiContainer" wrap="Wrap">
+                <CustomTile
+                    class="kpiCard"
+                    press=".onMigrationRunsKpiPress">
+                    <VBox>
+                        <HBox justifyContent="SpaceBetween" alignItems="Center">
+                            <Text text="Migration Runs" class="kpiLabel"/>
+                            <core:Icon src="sap-icon://process" class="kpiIcon"/>
+                        </HBox>
+                        <ObjectNumber number="{view>/runCount}" class="kpiNumber"/>
+                        <Text text="Migration activity" class="kpiDescription"/>
+                    </VBox>
+                </CustomTile>
+
+                <CustomTile
+                    class="kpiCard"
+                    press=".onSourceSystemsKpiPress">
+                    <VBox>
+                        <HBox justifyContent="SpaceBetween" alignItems="Center">
+                            <Text text="Source Systems" class="kpiLabel"/>
+                            <core:Icon src="sap-icon://database" class="kpiIcon"/>
+                        </HBox>
+                        <ObjectNumber number="{view>/sourceCount}" class="kpiNumber"/>
+                        <Text text="Registered source systems" class="kpiDescription"/>
+                    </VBox>
+                </CustomTile>
+
+                <CustomTile
+                    class="kpiCard"
+                    press=".onTargetSystemsKpiPress">
+                    <VBox>
+                        <HBox justifyContent="SpaceBetween" alignItems="Center">
+                            <Text text="Target Systems" class="kpiLabel"/>
+                            <core:Icon src="sap-icon://cloud" class="kpiIcon"/>
+                        </HBox>
+                        <ObjectNumber number="{view>/targetCount}" class="kpiNumber"/>
+                        <Text text="Available target systems" class="kpiDescription"/>
+                    </VBox>
+                </CustomTile>
+            </HBox>
+
+            <!-- START NEW MIGRATION -->
+            <VBox class="sectionContainer">
+                <Title
+                    text="Start New Migration"
+                    level="H2"
+                    class="sectionTitle"/>
+                <Text
+                    text="Select the migration landscape to discover and understand the source and target."
+                    class="sectionDescription"/>
+
+                <Panel class="migrationPanel" backgroundDesign="Solid">
+                    <content>
+                        <layout:Grid defaultSpan="XL6 L6 M6 S12" hSpacing="1" vSpacing="1">
+
+                            <!-- SOURCE SYSTEM -->
+                            <VBox class="fieldContainer">
+                                <Label text="Source System" required="true"/>
+                                <Select
+                                    id="sourceSystemSelect"
+                                    width="100%"
+                                    selectedKey="{view>/selectedSourceSystemUUID}"
+                                    items="{view>/sourceSystems}"
+                                    change=".onSourceSystemChange">
+                                    <core:Item key="{view>ID}" text="{view>systemName} ({view>systemId})"/>
+                                </Select>
+                            </VBox>
+
+                            <!-- SOURCE CONNECTION -->
+                            <VBox class="fieldContainer">
+                                <Label text="Source Connection" required="true"/>
+                                <Select
+                                    id="sourceConnectionSelect"
+                                    width="100%"
+                                    selectedKey="{view>/selectedSourceConnection}"
+                                    items="{view>/sourceConnections}"
+                                    change=".onSourceConnectionChange">
+                                    <core:Item key="{view>connectionId}" text="{view>connectionName} ({view>connectionId})"/>
+                                </Select>
+                            </VBox>
+
+                            <!-- TARGET SYSTEM -->
+                            <VBox class="fieldContainer">
+                                <Label text="Target System" required="true"/>
+                                <Select
+                                    id="targetSystemSelect"
+                                    width="100%"
+                                    selectedKey="{view>/selectedTargetSystemUUID}"
+                                    items="{view>/targetSystems}"
+                                    change=".onTargetSystemChange">
+                                    <core:Item key="{view>ID}" text="{view>systemName} ({view>systemId})"/>
+                                </Select>
+                            </VBox>
+
+                        </layout:Grid>
+
+                        <!-- STEP 1: SOURCE CONNECTION STATUS -->
+                        <VBox class="sapUiSmallMarginTop">
+                            <Title text="Step 1: Source Connection" level="H3"/>
+                            <HBox alignItems="Center" wrap="Wrap" class="sapUiTinyMarginTop">
+                                <Button
+                                    id="testConnectionButton"
+                                    text="Test Connection"
+                                    icon="sap-icon://connected"
+                                    press=".onTestConnection"
+                                    enabled="{= !!${view>/selectedSourceConnection} &amp;&amp; !${view>/connection/busy} }"
+                                    class="sapUiSmallMarginEnd"/>
+                                <BusyIndicator
+                                    visible="{view>/connection/busy}"
+                                    size="1.5rem"
+                                    class="sapUiSmallMarginEnd"/>
+                                <ObjectStatus
+                                    text="{view>/connection/statusText}"
+                                    state="{view>/connection/state}"
+                                    inverted="true"
+                                    class="sapUiSmallMarginEnd"/>
+                                <Text text="{view>/connection/details}"/>
+                            </HBox>
+                            <MessageStrip
+                                text="{view>/connection/message}"
+                                type="{view>/connection/messageType}"
+                                visible="{= !!${view>/connection/message} }"
+                                showIcon="true"
+                                class="sapUiTinyMarginTop"/>
+                        </VBox>
+
+                        <HBox justifyContent="End" class="migrationActionContainer">
+                            <Button
+                                text="Discover &amp; Analyze"
+                                icon="sap-icon://search"
+                                type="Emphasized"
+                                press=".onDiscoverAnalyze"/>
+                        </HBox>
+                    </content>
+                </Panel>
+            </VBox>
+
+            <!-- RECENT MIGRATION RUNS -->
+            <VBox class="sectionContainer">
+                <Title
+                    text="Recent Migration Runs"
+                    level="H2"
+                    class="sectionTitle"/>
+                <Text
+                    text="Monitor migration activity and current processing status."
+                    class="sectionDescription"/>
+
+                <Table
+                    id="migrationRunsTable"
+                    items="{view>/migrationRuns}"
+                    growing="true"
+                    growingThreshold="10"
+                    noDataText="No migration runs available"
+                    class="runsTable">
+                    <columns>
+                        <Column><Text text="Run ID"/></Column>
+                        <Column><Text text="Business Object"/></Column>
+                        <Column><Text text="Source"/></Column>
+                        <Column><Text text="Target"/></Column>
+                        <Column><Text text="Status"/></Column>
+                        <Column hAlign="End" width="3rem"/>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Navigation" press=".onRunPress">
+                            <cells>
+                                <Text text="{view>runId}" class="runIdText"/>
+                                <Text text="{view>businessObject}"/>
+                                <Text text="{view>sourceSystem}"/>
+                                <Text text="{view>targetSystem}"/>
+                                <ObjectStatus text="{view>status}" state="Information"/>
+                                <Button icon="sap-icon://navigation-right-arrow" type="Transparent"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+        </content>
+    </Page>
+</mvc:View>

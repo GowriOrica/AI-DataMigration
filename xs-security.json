@@ -1,0 +1,20 @@
+{
+  "xsappname": "migration-orchestrator",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.MigrationAccess",
+      "description": "Access to Migration Orchestrator APIs"
+    }
+  ],
+  "role-templates": [
+    {
+      "name": "MigrationOrchestratorUser",
+      "description": "Access Migration Orchestrator APIs",
+      "scope-references": [
+        "$XSAPPNAME.MigrationAccess"
+      ]
+    }
+  ],
+  "authorities-inheritance": false
+}

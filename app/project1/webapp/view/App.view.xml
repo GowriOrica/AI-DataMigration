@@ -1,0 +1,74 @@
+<mvc:View controllerName="project1.controller.App"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+    <App id="rootApp">
+        <pages>
+            <!-- App frame: the header and the step bar are defined once here and shown above every page -->
+            <Page
+                id="shellPage"
+                showHeader="true"
+                enableScrolling="false">
+
+                <customHeader>
+                    <Bar>
+                        <contentLeft>
+                            <Title text="AI Migration Cockpit" level="H2"/>
+                        </contentLeft>
+                        <contentMiddle>
+                            <Text
+                                id="contextLine"
+                                text="{= ${migrationContext>/sourceSystemId} ? ${migrationContext>/sourceSystemId} + ' → ' + (${migrationContext>/targetSystemId} || '-') + (${migrationContext>/assessedBusinessObject} ? '  ·  ' + ${migrationContext>/assessedBusinessObject} : '') : 'Select a source system to start' }"/>
+                        </contentMiddle>
+                        <contentRight>
+                            <Button
+                                icon="sap-icon://journey-arrive"
+                                text="Roadmap"
+                                type="Transparent"
+                                press=".onOpenRoadmap"/>
+                            <Button
+                                icon="sap-icon://database"
+                                text="Object Store"
+                                type="Transparent"
+                                press=".onOpenObjectStore"/>
+                            <Button
+                                icon="sap-icon://action-settings"
+                                text="System Administration"
+                                type="Transparent"
+                                press=".onOpenAdministration"/>
+                            <Button
+                                icon="sap-icon://da"
+                                text="Joule"
+                                type="Transparent"
+                                press=".onJoule"/>
+                        </contentRight>
+                    </Bar>
+                </customHeader>
+
+                <subHeader>
+                    <Toolbar>
+                        <SegmentedButton
+                            id="journey"
+                            width="100%"
+                            selectionChange=".onStepChange">
+                            <items>
+                                <SegmentedButtonItem key="RouteView1" text="1. Source"/>
+                                <SegmentedButtonItem key="BusinessObjectAssessment" text="2. Business Objects"/>
+                                <SegmentedButtonItem key="SourceUnderstanding" text="3. Source Data"/>
+                                <SegmentedButtonItem key="DataProfiling" text="4. Data Profiling"/>
+                                <SegmentedButtonItem key="Cleansing" text="5. Cleansing"/>
+                                <SegmentedButtonItem key="TargetMapping" text="6. Target &amp; Mapping (planned)"/>
+                                <SegmentedButtonItem key="RunDetails" text="7. Execution &amp; Reconciliation (planned)"/>
+                            </items>
+                        </SegmentedButton>
+                    </Toolbar>
+                </subHeader>
+
+                <content>
+                    <!-- the router puts the pages here (manifest: controlId "app") -->
+                    <NavContainer id="app" height="100%"/>
+                </content>
+            </Page>
+        </pages>
+    </App>
+</mvc:View>

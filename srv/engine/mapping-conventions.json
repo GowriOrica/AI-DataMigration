@@ -1,0 +1,27 @@
+{
+  "_comment": [
+    "Generic conventions used by the mapping suggester. Configuration, not business rules:",
+    "business rules (constants, value mappings, selections) are entered and approved by the functional team.",
+    "isoCodeTags        : code tags whose values follow an international standard and pass through unchanged (DIRECT).",
+    "                     All other code tags are suggested as VALUE_MAP from source to canonical.",
+    "continuationTags   : a tag whose overflow continues in another tag (long name -> additional name line).",
+    "pickFlagSuffixes   : flag tags used to pick one entry of a collection (standard address, default phone).",
+    "minStructureOverlap: share of a target structure's meanings a source structure must provide to be suggested.",
+    "flagFalseValues    : values treated as false when a code is converted to a flag (functional team can change the rule)."
+  ],
+  "isoCodeTags": [
+    "address.country",
+    "party.language",
+    "finance.currency",
+    "sales.currency",
+    "bank.country",
+    "tax.country"
+  ],
+  "continuationTags": {
+    "party.name": "party.nameAdditional",
+    "address.street": "address.line"
+  },
+  "pickFlagSuffixes": [".isStandard", ".isDefault"],
+  "minStructureOverlap": 0.3,
+  "flagFalseValues": ["0", "", "N", "NO", "FALSE", "false"]
+}

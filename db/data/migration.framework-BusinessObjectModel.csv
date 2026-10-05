@@ -1,0 +1,2 @@
+ID;type_code;layer;systemId;name;version;status;origin;description
+cff7f6d2-e465-5139-9f95-5574396564a6;BUSINESS_PARTNER;CANONICAL;;Canonical Business Partner;1;DRAFT;MANUAL;Source- and target-independent Business Partner used as the hub between all source systems and all targets. Code values are canonical codes.

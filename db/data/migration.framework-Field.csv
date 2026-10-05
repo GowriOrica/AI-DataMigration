@@ -1,0 +1,51 @@
+ID;structure_ID;name;sortOrder;description;dataType;length;isKey;mandatory;semanticTag_code;tagConfidence;tagOrigin;tagReason;tagStatus
+12fbcc9f-5f8d-52ad-b428-8206f8838509;b85b0c5e-28fc-550a-b300-0ff46ba1ca33;legacyKey;1;Business key in the source system;String;60;true;true;party.legacyId;100;MANUAL;Defined in the canonical model;APPROVED
+d168d5b0-8d08-5709-a817-f1a3436815e5;b85b0c5e-28fc-550a-b300-0ff46ba1ca33;sourceSystem;2;Source system ID;String;100;true;true;meta.sourceSystem;100;MANUAL;Defined in the canonical model;APPROVED
+27975a06-7a57-590b-b75e-eda72a7057ce;b85b0c5e-28fc-550a-b300-0ff46ba1ca33;category;3;ORGANIZATION | PERSON | GROUP;String;20;false;true;party.category;100;MANUAL;Defined in the canonical model;APPROVED
+5c3a9066-1c36-569d-85f2-d398f7f53a09;b85b0c5e-28fc-550a-b300-0ff46ba1ca33;name1;4;Name line 1;String;40;false;true;party.name;100;MANUAL;Defined in the canonical model;APPROVED
+d901a350-b77d-54ee-9f87-9dbedadbee93;b85b0c5e-28fc-550a-b300-0ff46ba1ca33;name2;5;Name line 2;String;40;false;false;party.nameAdditional;100;MANUAL;Defined in the canonical model;APPROVED
+96d3d705-75eb-55d4-855f-3001032c2d78;b85b0c5e-28fc-550a-b300-0ff46ba1ca33;name3;6;Name line 3;String;40;false;false;party.nameAdditional;100;MANUAL;Defined in the canonical model;APPROVED
+d32969da-27ac-5bd8-9210-f8538b186d6a;b85b0c5e-28fc-550a-b300-0ff46ba1ca33;name4;7;Name line 4;String;40;false;false;party.nameAdditional;100;MANUAL;Defined in the canonical model;APPROVED
+dc65e4d1-d312-5c4b-8d87-87d68457bd44;b85b0c5e-28fc-550a-b300-0ff46ba1ca33;searchTerm;8;Search term;String;20;false;false;party.searchTerm;100;MANUAL;Defined in the canonical model;APPROVED
+2e7f13ee-ea84-5ac5-9123-c5a1cfdcb559;b85b0c5e-28fc-550a-b300-0ff46ba1ca33;language;9;Correspondence language (ISO 639-1);String;2;false;false;party.language;100;MANUAL;Defined in the canonical model;APPROVED
+d32852cc-1e0f-5724-8a0b-e295e4c13e2e;b85b0c5e-28fc-550a-b300-0ff46ba1ca33;status;10;Canonical lifecycle status;String;20;false;false;party.status;100;MANUAL;Defined in the canonical model;APPROVED
+76e650ef-6d44-56e8-a5e1-483070a4c3b6;b85b0c5e-28fc-550a-b300-0ff46ba1ca33;isBlocked;11;Party is blocked;Boolean;;false;false;party.blocked;100;MANUAL;Defined in the canonical model;APPROVED
+54634622-3f4a-58e5-80e4-6b7b56b2ce69;8e8a4ee8-8105-5ef2-a6e5-2753d527d75f;addressKey;1;Address identifier within the partner;String;40;true;true;address.id;100;MANUAL;Defined in the canonical model;APPROVED
+8f897d3f-f145-5583-9051-6eb6f1d8d974;8e8a4ee8-8105-5ef2-a6e5-2753d527d75f;usage;2;STANDARD | BILL_TO | SHIP_TO | OTHER;String;20;false;true;address.usage;100;MANUAL;Defined in the canonical model;APPROVED
+e46589fc-4eeb-5104-92e8-76f89cb32f52;8e8a4ee8-8105-5ef2-a6e5-2753d527d75f;street;3;Street;String;60;false;false;address.street;100;MANUAL;Defined in the canonical model;APPROVED
+2d334a09-52d5-5336-8283-6573daecd7fa;8e8a4ee8-8105-5ef2-a6e5-2753d527d75f;houseNumber;4;House number;String;10;false;false;address.houseNumber;100;MANUAL;Defined in the canonical model;APPROVED
+0d55b98b-0b1c-58f0-90cc-fdda9841994c;8e8a4ee8-8105-5ef2-a6e5-2753d527d75f;addressLine2;5;Additional address line 2;String;60;false;false;address.line;100;MANUAL;Defined in the canonical model;APPROVED
+5087b82b-531b-5f87-94ee-a6b2df7159be;8e8a4ee8-8105-5ef2-a6e5-2753d527d75f;addressLine3;6;Additional address line 3;String;60;false;false;address.line;100;MANUAL;Defined in the canonical model;APPROVED
+87f9c1a6-1e08-5ec9-89ab-52f1479bae7e;8e8a4ee8-8105-5ef2-a6e5-2753d527d75f;addressLine4;7;Additional address line 4;String;60;false;false;address.line;100;MANUAL;Defined in the canonical model;APPROVED
+a9a158cd-7a98-5729-9007-9b35f51b566d;8e8a4ee8-8105-5ef2-a6e5-2753d527d75f;city;8;City;String;40;false;true;address.city;100;MANUAL;Defined in the canonical model;APPROVED
+6de4eb27-0362-5b80-9af0-916fb21e7a06;8e8a4ee8-8105-5ef2-a6e5-2753d527d75f;postalCode;9;Postal code;String;10;false;false;address.postalCode;100;MANUAL;Defined in the canonical model;APPROVED
+94ba02bb-74cf-5b30-bf6a-18417b2391e2;8e8a4ee8-8105-5ef2-a6e5-2753d527d75f;region;10;Region;String;3;false;false;address.region;100;MANUAL;Defined in the canonical model;APPROVED
+f1da581e-4233-5608-8a22-87a4632b112d;8e8a4ee8-8105-5ef2-a6e5-2753d527d75f;country;11;Country (ISO 3166-1 alpha-2);String;3;false;true;address.country;100;MANUAL;Defined in the canonical model;APPROVED
+aeffa388-201c-5f7e-b799-4d61f9ffc542;8e8a4ee8-8105-5ef2-a6e5-2753d527d75f;isStandard;12;Standard address of the partner;Boolean;;false;true;address.isStandard;100;MANUAL;Defined in the canonical model;APPROVED
+b084e048-17bc-5b68-bacb-34a12759e187;c26d8355-0020-567b-b3ad-a7004e29055e;type;1;PHONE | MOBILE | FAX | EMAIL;String;10;true;true;comm.type;100;MANUAL;Defined in the canonical model;APPROVED
+b5ceaa20-d764-5052-9fea-3591813f20be;c26d8355-0020-567b-b3ad-a7004e29055e;value;2;Number or email address;String;241;true;true;comm.value;100;MANUAL;Defined in the canonical model;APPROVED
+1f0aa711-15c3-5c9c-bec1-7850ca373c38;c26d8355-0020-567b-b3ad-a7004e29055e;isDefault;3;Default entry of its type;Boolean;;false;false;comm.isDefault;100;MANUAL;Defined in the canonical model;APPROVED
+fac2dbf1-90ab-534d-98b4-eec1fddb5082;67c71d0f-becc-5145-bba8-d16715a5a84c;roleCode;1;CUSTOMER | SUPPLIER | CONTACT | ...;String;20;true;true;party.role;100;MANUAL;Defined in the canonical model;APPROVED
+eb0e9e8c-21e4-50d0-9a06-f753f44f00fd;67c71d0f-becc-5145-bba8-d16715a5a84c;validFrom;2;Role valid from;Date;;false;false;party.roleValidFrom;100;MANUAL;Defined in the canonical model;APPROVED
+6cfeb108-66f2-5897-a181-6272789a0208;48845ae3-0528-5df2-b0df-5d7404cf1f3a;taxCategory;1;VAT | ABN | GST | ...;String;10;true;true;tax.category;100;MANUAL;Defined in the canonical model;APPROVED
+6546e0a2-27e3-53da-9da8-787adb077c69;48845ae3-0528-5df2-b0df-5d7404cf1f3a;number;2;Tax number;String;60;false;true;tax.number;100;MANUAL;Defined in the canonical model;APPROVED
+823798d1-eb4a-5403-841b-6f3ad39c51d5;48845ae3-0528-5df2-b0df-5d7404cf1f3a;country;3;Issuing country;String;3;false;false;tax.country;100;MANUAL;Defined in the canonical model;APPROVED
+39a58d12-4684-591a-a05c-deb337b26f16;5375f0df-0579-52a8-93bf-d16cc0b21258;accountId;1;Account identifier within the partner;String;10;true;true;bank.accountId;100;MANUAL;Defined in the canonical model;APPROVED
+c46a0a14-1221-5586-845f-b3d1fca3b24b;5375f0df-0579-52a8-93bf-d16cc0b21258;bankCountry;2;Bank country;String;3;false;true;bank.country;100;MANUAL;Defined in the canonical model;APPROVED
+e7406ffe-2485-5633-a989-93bc1b642f8d;5375f0df-0579-52a8-93bf-d16cc0b21258;bankKey;3;Bank key / BSB / routing number;String;15;false;false;bank.key;100;MANUAL;Defined in the canonical model;APPROVED
+d558668a-06c2-58ce-967f-ccc9159b71be;5375f0df-0579-52a8-93bf-d16cc0b21258;accountNumber;4;Account number;String;35;false;false;bank.account;100;MANUAL;Defined in the canonical model;APPROVED
+b23d68f4-be50-5f92-9c52-eb72b639b174;5375f0df-0579-52a8-93bf-d16cc0b21258;iban;5;IBAN;String;34;false;false;bank.iban;100;MANUAL;Defined in the canonical model;APPROVED
+69375252-4a37-5625-8d97-02e3328df4c2;5375f0df-0579-52a8-93bf-d16cc0b21258;accountHolder;6;Account holder;String;60;false;false;bank.holder;100;MANUAL;Defined in the canonical model;APPROVED
+1214de8a-4c16-5165-986e-1e6d3c40a720;561fbb17-fc01-5580-87fa-42d139a71e87;companyCode;1;Canonical company code;String;10;true;true;org.companyCode;100;MANUAL;Defined in the canonical model;APPROVED
+fa42ba7f-3932-5702-93f1-009823fddf7a;561fbb17-fc01-5580-87fa-42d139a71e87;paymentTerms;2;Canonical payment terms;String;10;false;false;finance.paymentTerms;100;MANUAL;Defined in the canonical model;APPROVED
+27af8a50-3dd4-57d9-8137-2b2b5b929df5;561fbb17-fc01-5580-87fa-42d139a71e87;reconAccountGroup;3;Reconciliation account group;String;20;false;false;finance.reconciliationAccount;100;MANUAL;Defined in the canonical model;APPROVED
+270e70bd-8dc0-515f-ad44-f702a105145b;561fbb17-fc01-5580-87fa-42d139a71e87;dunningProcedure;4;Dunning procedure;String;10;false;false;finance.dunningProcedure;100;MANUAL;Defined in the canonical model;APPROVED
+e745b162-2eab-587b-8840-038f92b60804;561fbb17-fc01-5580-87fa-42d139a71e87;creditLimit;5;Credit limit;Decimal;;false;false;finance.creditLimit;100;MANUAL;Defined in the canonical model;APPROVED
+2efaf0f4-b414-5f89-8863-96bcbf0699ea;561fbb17-fc01-5580-87fa-42d139a71e87;currency;6;Currency (ISO 4217);String;5;false;false;finance.currency;100;MANUAL;Defined in the canonical model;APPROVED
+35474951-6ee0-5bad-9a6d-9023cade7ce6;131e04ed-887d-5a86-af8b-0665eef08c0f;salesOrg;1;Canonical sales organization;String;10;true;true;org.salesOrg;100;MANUAL;Defined in the canonical model;APPROVED
+35cadc8f-77b6-5015-b812-4f073a1f6014;131e04ed-887d-5a86-af8b-0665eef08c0f;distributionChannel;2;Canonical distribution channel;String;10;true;true;org.distributionChannel;100;MANUAL;Defined in the canonical model;APPROVED
+573ea9cf-cc65-5246-afff-16a1a6d38154;131e04ed-887d-5a86-af8b-0665eef08c0f;division;3;Canonical division;String;10;true;true;org.division;100;MANUAL;Defined in the canonical model;APPROVED
+11accbc6-2b96-5581-8cc8-692a738e83e7;131e04ed-887d-5a86-af8b-0665eef08c0f;currency;4;Currency (ISO 4217);String;5;false;false;sales.currency;100;MANUAL;Defined in the canonical model;APPROVED
+931c2c8b-1181-530d-b516-c2decf84f685;131e04ed-887d-5a86-af8b-0665eef08c0f;paymentTerms;5;Canonical payment terms;String;10;false;false;sales.paymentTerms;100;MANUAL;Defined in the canonical model;APPROVED
+65ba5daf-4fa0-5205-8917-0041c74df704;131e04ed-887d-5a86-af8b-0665eef08c0f;incoterms;6;Incoterms;String;10;false;false;sales.incoterms;100;MANUAL;Defined in the canonical model;APPROVED
+35eebbf6-175c-57a9-bea5-d97edbe9b5e3;131e04ed-887d-5a86-af8b-0665eef08c0f;customerGroup;7;Canonical customer group;String;10;false;false;sales.customerGroup;100;MANUAL;Defined in the canonical model;APPROVED

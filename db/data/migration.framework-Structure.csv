@@ -1,0 +1,9 @@
+ID;model_ID;name;isRoot;sortOrder;description
+b85b0c5e-28fc-550a-b300-0ff46ba1ca33;cff7f6d2-e465-5139-9f95-5574396564a6;BusinessPartner;true;1;Root of the Business Partner
+8e8a4ee8-8105-5ef2-a6e5-2753d527d75f;cff7f6d2-e465-5139-9f95-5574396564a6;Address;false;2;Postal addresses of the Business Partner
+c26d8355-0020-567b-b3ad-a7004e29055e;cff7f6d2-e465-5139-9f95-5574396564a6;Communication;false;3;Phone, fax and email entries of an address
+67c71d0f-becc-5145-bba8-d16715a5a84c;cff7f6d2-e465-5139-9f95-5574396564a6;Role;false;4;Business roles of the partner
+48845ae3-0528-5df2-b0df-5d7404cf1f3a;cff7f6d2-e465-5139-9f95-5574396564a6;TaxNumber;false;5;Tax registration numbers
+5375f0df-0579-52a8-93bf-d16cc0b21258;cff7f6d2-e465-5139-9f95-5574396564a6;BankAccount;false;6;Bank accounts of the partner
+561fbb17-fc01-5580-87fa-42d139a71e87;cff7f6d2-e465-5139-9f95-5574396564a6;CompanyData;false;7;Company / legal entity specific financial data
+131e04ed-887d-5a86-af8b-0665eef08c0f;cff7f6d2-e465-5139-9f95-5574396564a6;SalesAreaData;false;8;Sales area specific data

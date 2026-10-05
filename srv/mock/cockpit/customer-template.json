@@ -1,0 +1,92 @@
+{
+  "_comment": [
+    "MOCK FIXTURE - INDICATIVE MIGRATION COCKPIT 'CUSTOMER' TARGET MODEL",
+    "Simplified structures and SAP-style field names for the end-to-end slice.",
+    "The real structure and field list is imported from the Cockpit migration object template of the client's S/4 release.",
+    "Generic importModel format: the same format is used for any business object - no object-specific code."
+  ],
+  "businessObjectType": "BUSINESS_PARTNER",
+  "layer": "TARGET",
+  "systemId": "S4_TARGET",
+  "name": "Migration Cockpit Customer",
+  "description": "Indicative Migration Cockpit 'Customer' migration object (staging structures)",
+  "structures": [
+    {
+      "name": "GENERAL",
+      "description": "General data",
+      "fields": [
+        { "name": "KUNNR", "description": "Customer Number", "dataType": "String", "length": 10, "isKey": true, "mandatory": true },
+        { "name": "BU_GROUP", "description": "Business Partner Grouping", "dataType": "String", "length": 4, "mandatory": true },
+        { "name": "NAME1", "description": "Name 1", "dataType": "String", "length": 40, "mandatory": true },
+        { "name": "NAME2", "description": "Name 2", "dataType": "String", "length": 40 },
+        { "name": "SORT1", "description": "Search Term 1", "dataType": "String", "length": 20 },
+        { "name": "STREET", "description": "Street", "dataType": "String", "length": 60 },
+        { "name": "HOUSE_NUM1", "description": "House Number", "dataType": "String", "length": 10 },
+        { "name": "CITY1", "description": "City", "dataType": "String", "length": 40, "mandatory": true },
+        { "name": "POST_CODE1", "description": "City Postal Code", "dataType": "String", "length": 10 },
+        { "name": "REGION", "description": "Region (State, Province, County)", "dataType": "String", "length": 3 },
+        { "name": "COUNTRY", "description": "Country/Region Key", "dataType": "String", "length": 3, "mandatory": true },
+        { "name": "LANGU", "description": "Language Key", "dataType": "String", "length": 2 },
+        { "name": "TELNR", "description": "Telephone No.: Dialing Code + Number", "dataType": "String", "length": 30 },
+        { "name": "SMTP_ADDR", "description": "Email Address", "dataType": "String", "length": 241 }
+      ]
+    },
+    {
+      "name": "ADDRESS",
+      "parent": "GENERAL",
+      "cardinality": "0..N",
+      "description": "Additional addresses",
+      "fields": [
+        { "name": "KUNNR", "description": "Customer Number", "dataType": "String", "length": 10, "isKey": true, "mandatory": true },
+        { "name": "ADDR_KEY", "description": "Address Number", "dataType": "String", "length": 10, "isKey": true, "mandatory": true },
+        { "name": "NAME1", "description": "Name 1", "dataType": "String", "length": 40 },
+        { "name": "STREET", "description": "Street", "dataType": "String", "length": 60 },
+        { "name": "CITY1", "description": "City", "dataType": "String", "length": 40, "mandatory": true },
+        { "name": "POST_CODE1", "description": "City Postal Code", "dataType": "String", "length": 10 },
+        { "name": "REGION", "description": "Region (State, Province, County)", "dataType": "String", "length": 3 },
+        { "name": "COUNTRY", "description": "Country/Region Key", "dataType": "String", "length": 3, "mandatory": true }
+      ]
+    },
+    {
+      "name": "TAX_NUMBERS",
+      "parent": "GENERAL",
+      "cardinality": "0..N",
+      "description": "Tax numbers",
+      "fields": [
+        { "name": "KUNNR", "description": "Customer Number", "dataType": "String", "length": 10, "isKey": true, "mandatory": true },
+        { "name": "TAXTYPE", "description": "Tax Number Category", "dataType": "String", "length": 4, "isKey": true, "mandatory": true },
+        { "name": "TAXNUM", "description": "Business Partner Tax Number", "dataType": "String", "length": 20, "mandatory": true }
+      ]
+    },
+    {
+      "name": "COMPANY",
+      "parent": "GENERAL",
+      "cardinality": "0..N",
+      "description": "Company code data",
+      "fields": [
+        { "name": "KUNNR", "description": "Customer Number", "dataType": "String", "length": 10, "isKey": true, "mandatory": true },
+        { "name": "BUKRS", "description": "Company Code", "dataType": "String", "length": 4, "isKey": true, "mandatory": true },
+        { "name": "AKONT", "description": "Reconciliation Account in General Ledger", "dataType": "String", "length": 10, "mandatory": true },
+        { "name": "ZTERM", "description": "Terms of Payment Key", "dataType": "String", "length": 4 },
+        { "name": "MAHNA", "description": "Dunning Procedure", "dataType": "String", "length": 4 },
+        { "name": "KLIMK", "description": "Credit limit", "dataType": "Decimal", "length": 15 }
+      ]
+    },
+    {
+      "name": "SALES",
+      "parent": "GENERAL",
+      "cardinality": "0..N",
+      "description": "Sales area data",
+      "fields": [
+        { "name": "KUNNR", "description": "Customer Number", "dataType": "String", "length": 10, "isKey": true, "mandatory": true },
+        { "name": "VKORG", "description": "Sales Organization", "dataType": "String", "length": 4, "isKey": true, "mandatory": true },
+        { "name": "VTWEG", "description": "Distribution Channel", "dataType": "String", "length": 2, "isKey": true, "mandatory": true },
+        { "name": "SPART", "description": "Division", "dataType": "String", "length": 2, "isKey": true, "mandatory": true },
+        { "name": "WAERS", "description": "Currency", "dataType": "String", "length": 5 },
+        { "name": "ZTERM", "description": "Terms of Payment Key", "dataType": "String", "length": 4 },
+        { "name": "KDGRP", "description": "Customer Group", "dataType": "String", "length": 2 },
+        { "name": "INCO1", "description": "Incoterms (Part 1)", "dataType": "String", "length": 3 }
+      ]
+    }
+  ]
+}

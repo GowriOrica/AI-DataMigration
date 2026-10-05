@@ -1,0 +1,259 @@
+{
+  "_version": "1.59.0",
+  "sap.app": {
+    "id": "migration.workbench",
+    "type": "application",
+    "title": "Migration Workbench",
+    "description": "Business object models, mapping review and migration preview for the functional team",
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/framework/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    },
+    "i18n": "i18n/i18n.properties"
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "dependencies": {
+      "minUI5Version": "1.120.0",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.fe.templates": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "": {
+        "dataSource": "mainService",
+        "preload": true,
+        "settings": {
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      }
+    },
+    "routing": {
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "ModelsList",
+          "target": "ModelsList"
+        },
+        {
+          "pattern": "BusinessObjectModels({key}):?query:",
+          "name": "ModelObjectPage",
+          "target": "ModelObjectPage"
+        },
+        {
+          "pattern": "BusinessObjectModels({key})/structures({key2}):?query:",
+          "name": "StructureObjectPage",
+          "target": "StructureObjectPage"
+        },
+        {
+          "pattern": "BusinessObjectModels({key})/mappingSets({key2}):?query:",
+          "name": "MappingSetObjectPage",
+          "target": "MappingSetObjectPage"
+        },
+        {
+          "pattern": "BusinessObjectModels({key})/mappingSets({key2})/structureMappings({key3}):?query:",
+          "name": "StructureMappingObjectPage",
+          "target": "StructureMappingObjectPage"
+        },
+        {
+          "pattern": "BusinessObjectModels({key})/previewRuns({key2}):?query:",
+          "name": "PreviewRunObjectPage",
+          "target": "PreviewRunObjectPage"
+        }
+      ],
+      "targets": {
+        "ModelsList": {
+          "type": "Component",
+          "id": "ModelsList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "contextPath": "/BusinessObjectModels",
+              "variantManagement": "Page",
+              "initialLoad": "Enabled",
+              "navigation": {
+                "BusinessObjectModels": {
+                  "detail": {
+                    "route": "ModelObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "ModelObjectPage": {
+          "type": "Component",
+          "id": "ModelObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/BusinessObjectModels",
+              "navigation": {
+                "structures": {
+                  "detail": {
+                    "route": "StructureObjectPage"
+                  }
+                },
+                "mappingSets": {
+                  "detail": {
+                    "route": "MappingSetObjectPage"
+                  }
+                },
+                "previewRuns": {
+                  "detail": {
+                    "route": "PreviewRunObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "structures/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                },
+                "relationships/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                },
+                "mappingSets/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                },
+                "previewRuns/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "StructureObjectPage": {
+          "type": "Component",
+          "id": "StructureObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/BusinessObjectModels/structures",
+              "controlConfiguration": {
+                "fields/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "MappingSetObjectPage": {
+          "type": "Component",
+          "id": "MappingSetObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/BusinessObjectModels/mappingSets",
+              "navigation": {
+                "structureMappings": {
+                  "detail": {
+                    "route": "StructureMappingObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "structureMappings/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "StructureMappingObjectPage": {
+          "type": "Component",
+          "id": "StructureMappingObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/BusinessObjectModels/mappingSets/structureMappings",
+              "controlConfiguration": {
+                "fieldMappings/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "PreviewRunObjectPage": {
+          "type": "Component",
+          "id": "PreviewRunObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/BusinessObjectModels/previewRuns",
+              "controlConfiguration": {
+                "issues/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                },
+                "rows/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                },
+                "documents/@com.sap.vocabularies.UI.v1.LineItem": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "sap.fiori": {
+    "registrationIds": [],
+    "archeType": "transactional"
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "migrationorchestrator.service"
+  }
+}

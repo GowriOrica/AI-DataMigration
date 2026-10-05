@@ -1,0 +1,46 @@
+{
+  "_comment": [
+    "DRAFT ANSWER KEY for the AI business object assessment of S/4HANA Cloud APIs.",
+    "Written from general SAP knowledge - a functional consultant must review it before it is relied on.",
+    "api    : source object name as discovered",
+    "accept : business object names that count as correct (compared case- and punctuation-insensitive)",
+    "notBusinessPartner : true when the API is NOT a Business Partner API - used for the 'false Business Partner' rate",
+    "Use: node scripts/assessment/evaluate-answer-key.js   (needs the discovered metadata in the database)"
+  ],
+  "entries": [
+    { "api": "API_BUSINESS_PARTNER", "accept": ["Business Partner"] },
+    { "api": "MD_BUSINESSPARTNER_SRV", "accept": ["Business Partner"] },
+    { "api": "MD_SUPPLIER_MASTER_SRV", "accept": ["Business Partner", "Supplier"] },
+    { "api": "MD_CUSTOMER_MASTER_SRV_01", "accept": ["Business Partner", "Customer"] },
+    { "api": "API_BPIDENTIFICATIONTYPE", "accept": ["Business Partner", "Business Partner Identification Type"] },
+    { "api": "API_BPRELATIONSHIPCATEGORY", "accept": ["Business Partner", "Business Partner Relationship Category"] },
+    { "api": "API_BPLEGALFORM", "accept": ["Business Partner", "Legal Form"] },
+    { "api": "API_BPCNTCTPERSNFUNCTION", "accept": ["Business Partner", "Contact Person Function"] },
+    { "api": "API_BPCNTCTPERSNDEPARTMENT", "accept": ["Business Partner", "Contact Person Department"] },
+    { "api": "API_BUSINESSPARTNERROLECODE", "accept": ["Business Partner"] },
+    { "api": "API_BUSINESSPARTNERINDUSTRYKEY", "accept": ["Business Partner"] },
+
+    { "api": "API_BANK", "accept": ["Bank"], "notBusinessPartner": true },
+    { "api": "API_CNSLDTNCOSTCENTER", "accept": ["Cost Center"], "notBusinessPartner": true },
+    { "api": "API_CNSLDTNCOSTCENTERHIER", "accept": ["Cost Center Hierarchy", "Cost Center"], "notBusinessPartner": true },
+    { "api": "API_CNSLDTNCHARTOFACCOUNTS", "accept": ["Chart of Accounts", "GL Account"], "notBusinessPartner": true },
+    { "api": "API_CNSLDTNBILLINGDOCTYPE", "accept": ["Billing Document Type", "Billing Document"], "notBusinessPartner": true },
+    { "api": "API_BILLINGDOCUMENT", "accept": ["Billing Document"], "notBusinessPartner": true },
+    { "api": "API_BILLINGDOCUMENTREQUEST", "accept": ["Billing Document Request"], "notBusinessPartner": true },
+    { "api": "API_CNSLDTNCOUNTRY", "accept": ["Country"], "notBusinessPartner": true },
+    { "api": "API_CNSLDTNCONTROLLINGAREA", "accept": ["Controlling Area"], "notBusinessPartner": true },
+    { "api": "API_CNSLDTNDIVISION", "accept": ["Division"], "notBusinessPartner": true },
+    { "api": "API_CNSLDTNDISTRCHANNEL", "accept": ["Distribution Channel"], "notBusinessPartner": true },
+    { "api": "API_CNSLDTNCUSTOMERGROUP", "accept": ["Customer Group"], "notBusinessPartner": true },
+    { "api": "API_CNSLDTNBUSINESSAREA", "accept": ["Business Area"], "notBusinessPartner": true },
+    { "api": "API_CAJOURNALENTRY", "accept": ["Journal Entry"], "notBusinessPartner": true },
+    { "api": "API_BOMWHEREUSED_2", "accept": ["Bill of Materials"], "notBusinessPartner": true },
+    { "api": "API_ASSETREVALUATIONINDEX", "accept": ["Asset Revaluation Index", "Asset"], "notBusinessPartner": true },
+    { "api": "API_CASHREGISTER_REMOTE", "accept": ["Cash Register"], "notBusinessPartner": true },
+    { "api": "API_CATALOGPROFILE", "accept": ["Catalog Profile"], "notBusinessPartner": true },
+    { "api": "API_ATPCALENDARBREAK", "accept": ["ATP Calendar Break"], "notBusinessPartner": true },
+    { "api": "API_CASECURITYDEPOSIT", "accept": ["Security Deposit"], "notBusinessPartner": true },
+    { "api": "API_CAINVOICINGDOCUMENT", "accept": ["Invoicing Document", "Invoice"], "notBusinessPartner": true },
+    { "api": "API_CHANGERECORDHISTORY", "accept": ["Change Record"], "notBusinessPartner": true }
+  ]
+}

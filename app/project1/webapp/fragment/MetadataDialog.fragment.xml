@@ -1,0 +1,207 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Dialog
+        id="metadataDialog"
+        title="Service Metadata"
+        contentWidth="90%"
+        contentHeight="80%"
+        stretchOnPhone="true">
+
+        <content>
+
+            <IconTabBar>
+
+                <!-- Entity Sets -->
+
+                <items>
+
+                    <IconTabFilter
+                        text="Entity Sets"
+                        icon="sap-icon://table-view">
+
+                        <Table
+                            items="{metadata>/EntitySets}"
+                            growing="true"
+                            growingThreshold="50">
+
+                            <columns>
+
+                                <Column>
+                                    <Text text="Entity Set"/>
+                                </Column>
+
+                                <Column>
+                                    <Text text="Entity Type"/>
+                                </Column>
+
+                            </columns>
+
+                            <items>
+
+                                <ColumnListItem>
+
+                                    <cells>
+
+                                        <ObjectIdentifier
+                                            title="{metadata>EntitySetName}"/>
+
+                                        <Text
+                                            text="{metadata>EntityType}"/>
+
+                                    </cells>
+
+                                </ColumnListItem>
+
+                            </items>
+
+                        </Table>
+
+                    </IconTabFilter>
+
+
+                    <!-- Properties -->
+
+                    <IconTabFilter
+                        text="Properties"
+                        icon="sap-icon://list">
+
+                        <Table
+                            items="{metadata>/Properties}"
+                            growing="true"
+                            growingThreshold="100">
+
+                            <columns>
+
+                                <Column>
+                                    <Text text="Entity"/>
+                                </Column>
+
+                                <Column>
+                                    <Text text="Property"/>
+                                </Column>
+
+                                <Column>
+                                    <Text text="Type"/>
+                                </Column>
+
+                                <Column width="7rem">
+                                    <Text text="Key"/>
+                                </Column>
+
+                                <Column width="7rem">
+                                    <Text text="Nullable"/>
+                                </Column>
+
+                                <Column width="8rem">
+                                    <Text text="Max Length"/>
+                                </Column>
+
+                            </columns>
+
+                            <items>
+
+                                <ColumnListItem>
+
+                                    <cells>
+
+                                        <Text
+                                            text="{metadata>EntityName}"/>
+
+                                        <ObjectIdentifier
+                                            title="{metadata>PropertyName}"/>
+
+                                        <Text
+                                            text="{metadata>Type}"/>
+
+                                        <CheckBox
+                                            selected="{metadata>IsKey}"
+                                            editable="false"/>
+
+                                        <CheckBox
+                                            selected="{metadata>Nullable}"
+                                            editable="false"/>
+
+                                        <Text
+                                            text="{metadata>MaxLength}"/>
+
+                                    </cells>
+
+                                </ColumnListItem>
+
+                            </items>
+
+                        </Table>
+
+                    </IconTabFilter>
+
+
+                    <!-- Navigation -->
+
+                    <IconTabFilter
+                        text="Navigation Properties"
+                        icon="sap-icon://journey-arrive">
+
+                        <Table
+                            items="{metadata>/NavigationProperties}">
+
+                            <columns>
+
+                                <Column>
+                                    <Text text="Entity"/>
+                                </Column>
+
+                                <Column>
+                                    <Text text="Navigation Property"/>
+                                </Column>
+
+                                <Column>
+                                    <Text text="Relationship"/>
+                                </Column>
+
+                            </columns>
+
+                            <items>
+
+                                <ColumnListItem>
+
+                                    <cells>
+
+                                        <Text
+                                            text="{metadata>EntityName}"/>
+
+                                        <Text
+                                            text="{metadata>NavigationProperty}"/>
+
+                                        <Text
+                                            text="{metadata>Relationship}"/>
+
+                                    </cells>
+
+                                </ColumnListItem>
+
+                            </items>
+
+                        </Table>
+
+                    </IconTabFilter>
+
+                </items>
+
+            </IconTabBar>
+
+        </content>
+
+
+        <beginButton>
+
+            <Button
+                text="Close"
+                press=".onCloseMetadata"/>
+
+        </beginButton>
+
+    </Dialog>
+
+</core:FragmentDefinition>

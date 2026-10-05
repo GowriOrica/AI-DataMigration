@@ -1,0 +1,64 @@
+{
+  "name": "migration-orchestrator",
+  "version": "1.0.0",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1145.0",
+    "@aws-sdk/s3-request-presigner": "^3.1146.0",
+    "@cap-js/hana": "^2",
+    "@google/genai": "^2.24.0",
+    "@sap-cloud-sdk/connectivity": "^4.9.1",
+    "@sap-cloud-sdk/http-client": "^4.9.1",
+    "@sap/cds": "^9",
+    "@sap/xssec": "^4",
+    "exceljs": "^4.4.0",
+    "fast-xml-parser": "^5.11.1"
+  },
+  "devDependencies": {
+    "@cap-js/cds-test": "^1.0.2",
+    "@cap-js/sqlite": "^2.4",
+    "@sap/cds-dk": "^9",
+    "cds-plugin-ui5": "^0.17.0",
+    "mbt": "^1.2.49",
+    "rimraf": "^5.0.5"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "start": "cds-serve",
+    "watch-project1": "cds watch --open project1/index.html?sap-ui-xx-viewCache=false --livereload false",
+    "undeploy": "cf undeploy migration-orchestrator --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "demo:start": "node scripts/demo/start-demo.js",
+    "demo:setup": "node scripts/demo/setup-demo.js"
+  },
+  "private": true,
+  "cds": {
+    "requires": {
+      "db": {
+        "kind": "hana"
+      },
+      "S4HANA_CLOUD": {
+        "kind": "odata-v2"
+      },
+      "objectstore": {
+        "vcap": {
+          "tag": "objectstore"
+        }
+      },
+      "[production]": {
+        "db": {
+          "kind": "hana"
+        },
+        "auth": "dummy"
+      },
+      "[demo]": {
+        "db": {
+          "kind": "sqlite",
+          "credentials": {
+            "url": "demo.sqlite"
+          }
+        }
+      }
+    }
+  }
+}

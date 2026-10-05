@@ -1,0 +1,324 @@
+<mvc:View
+    controllerName="project1.controller.SourceUnderstanding"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page
+        showHeader="false"
+        id="sourceUnderstandingPage"
+        title="Source Data">
+
+
+        <content>
+            <!-- CONTEXT HEADER PANEL -->
+            <VBox class="sectionContainer">
+                <Title
+                    text="{= 'Source Data' + (${migrationContext>/assessedBusinessObject} ? ' – ' + ${migrationContext>/assessedBusinessObject} : '') }"
+                    level="H1"
+                    class="sectionTitle"/>
+                <Text
+                    text="{= ${migrationContext>/assessedBusinessObject} ? 'The data extracted to the Object Store for the confirmed APIs of ' + ${migrationContext>/assessedBusinessObject} + ', and their fields.' : 'Select a business object on the Business Objects page first.' }"
+                    class="sectionDescription"/>
+
+                <Panel
+                    class="migrationPanel"
+                    backgroundDesign="Solid">
+                    <layout:Grid
+                        defaultSpan="XL3 L3 M6 S12"
+                        hSpacing="1"
+                        vSpacing="1">
+                        <VBox class="summaryField">
+                            <Label text="Source System"/>
+                            <Text text="{migrationContext>/sourceSystemName}"/>
+                        </VBox>
+                        <VBox class="summaryField">
+                            <Label text="Connection"/>
+                            <Text text="{migrationContext>/connectionName}"/>
+                        </VBox>
+                        <VBox class="summaryField">
+                            <Label text="Business object"/>
+                            <Text text="{migrationContext>/assessedBusinessObject}"/>
+                        </VBox>
+                        <VBox class="summaryField">
+                            <Label text="Selected API"/>
+                            <Text text="{sourceUnderstanding>/selectedObjectName}" class="runIdText"/>
+                        </VBox>
+                    </layout:Grid>
+                </Panel>
+            </VBox>
+
+            <!-- EXTRACTION BAR + EXTRACTION REPORT -->
+            <VBox class="sectionContainer">
+                <OverflowToolbar class="sapUiSmallMarginBottom">
+                    <Title text="Extraction" level="H2"/>
+                    <ToolbarSpacer/>
+                    <MenuButton
+                        text="Export to Excel"
+                        icon="sap-icon://excel-attachment"
+                        type="Emphasized"
+                        enabled="{= !!${sourceUnderstanding>/selectedExtractionId} &amp;&amp; !${sourceUnderstanding>/exportBusy} }">
+                        <menu>
+                            <Menu itemSelected=".onExportToExcel">
+                                <MenuItem
+                                    key="ALL"
+                                    icon="sap-icon://excel-attachment"
+                                    text="Whole business object (all APIs)"/>
+                                <MenuItem
+                                    key="API"
+                                    icon="sap-icon://table-view"
+                                    text="{= 'Only ' + (${sourceUnderstanding>/selectedOsObject} || 'the selected API') }"
+                                    enabled="{= !!${sourceUnderstanding>/selectedOsObject} }"/>
+                            </Menu>
+                        </menu>
+                    </MenuButton>
+                    <Button
+                        text="Verify checksums"
+                        icon="sap-icon://validate"
+                        press=".onVerifyExtraction"
+                        enabled="{= !!${sourceUnderstanding>/selectedExtractionId} }"/>
+                    <Button
+                        text="Refresh"
+                        icon="sap-icon://refresh"
+                        press=".onRefreshExtractions"/>
+                </OverflowToolbar>
+                <MessageStrip
+                    text="{sourceUnderstanding>/osMessage}"
+                    type="{sourceUnderstanding>/osMessageType}"
+                    showIcon="true"
+                    visible="{= !!${sourceUnderstanding>/osMessage} }"
+                    class="sapUiSmallMarginBottom"/>
+                <MessageStrip
+                    text="{sourceUnderstanding>/exportMessage}"
+                    type="{sourceUnderstanding>/exportMessageType}"
+                    showIcon="true"
+                    showCloseButton="true"
+                    visible="{= !!${sourceUnderstanding>/exportMessage} }"
+                    class="sapUiSmallMarginBottom"/>
+                <Select
+                    width="100%"
+                    visible="{= ${sourceUnderstanding>/extractions}.length > 0 }"
+                    selectedKey="{sourceUnderstanding>/selectedExtractionId}"
+                    change=".onExtractionChange"
+                    items="{sourceUnderstanding>/extractions}">
+                    <core:Item
+                        key="{sourceUnderstanding>extractionId}"
+                        text="{sourceUnderstanding>startedAtText} · {sourceUnderstanding>totalRecords} records · {sourceUnderstanding>status} · {sourceUnderstanding>extractionId}"/>
+                </Select>
+
+                <!-- the report in plain words -->
+                <Panel
+                    visible="{= !!${sourceUnderstanding>/report/summary} }"
+                    backgroundDesign="Solid"
+                    class="sapUiSmallMarginTop">
+                    <content>
+                        <VBox>
+                            <Text text="{sourceUnderstanding>/report/summary}" class="sapUiTinyMarginBottom"/>
+                            <Text text="{sourceUnderstanding>/report/source}" class="sapUiTinyMarginBottom"/>
+                            <ObjectStatus
+                                text="{sourceUnderstanding>/report/notIncluded}"
+                                state="Warning"
+                                visible="{= !!${sourceUnderstanding>/report/notIncluded} }"
+                                class="sapUiTinyMarginBottom"/>
+                            <ObjectStatus
+                                text="{sourceUnderstanding>/report/checksums}"
+                                state="{sourceUnderstanding>/report/checksumState}"
+                                class="sapUiTinyMarginBottom"/>
+                            <Text text="Only the main entity of each API is extracted. Child data such as addresses or roles is not included yet."/>
+                        </VBox>
+                    </content>
+                </Panel>
+            </VBox>
+
+            <!-- APIS LEFT, RECORDS / FIELDS OF THE SELECTED API RIGHT -->
+            <layout:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" vSpacing="0">
+
+                <VBox class="sectionContainer">
+                    <layoutData>
+                        <layout:GridData span="XL4 L4 M12 S12"/>
+                    </layoutData>
+                    <Title text="APIs ({= (${sourceUnderstanding>/apiRows} || []).length })" level="H2" class="sectionTitle"/>
+                    <Table
+                        id="apiTable"
+                        mode="SingleSelectMaster"
+                        selectionChange=".onApiSelect"
+                        items="{sourceUnderstanding>/apiRows}"
+                        noDataText="No API in this extraction."
+                        class="runsTable">
+                        <columns>
+                            <Column><Text text="API"/></Column>
+                            <Column hAlign="End" width="10rem"><Text text="In this extraction"/></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{sourceUnderstanding>api}" class="runIdText"/>
+                                    <ObjectStatus text="{sourceUnderstanding>statusText}" state="{sourceUnderstanding>statusState}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </VBox>
+
+                <VBox class="sectionContainer">
+                    <layoutData>
+                        <layout:GridData span="XL8 L8 M12 S12"/>
+                    </layoutData>
+                    <Title text="{= ${sourceUnderstanding>/selectedObjectName} &amp;&amp; ${sourceUnderstanding>/selectedObjectName} !== '-' ? ${sourceUnderstanding>/selectedObjectName} : 'Select an API on the left' }" level="H2" class="sectionTitle"/>
+                    <IconTabBar
+                        id="sourceDetailTabBar"
+                        selectedKey="records"
+                        expandable="false"
+                        select=".onDetailTabSelect"
+                        headerMode="Inline">
+                        <items>
+                            <IconTabFilter key="records" text="Records ({sourceUnderstanding>/osTotal})" icon="sap-icon://table-view">
+                                <HBox alignItems="Center" class="sapUiTinyMarginBottom">
+                                    <Button
+                                        icon="sap-icon://navigation-left-arrow"
+                                        tooltip="Previous records"
+                                        press=".onOsPrevious"
+                                        enabled="{= ${sourceUnderstanding>/osSkip} > 0 }"
+                                        class="sapUiTinyMarginEnd"/>
+                                    <Button
+                                        icon="sap-icon://navigation-right-arrow"
+                                        tooltip="Next records"
+                                        press=".onOsNext"
+                                        enabled="{= ${sourceUnderstanding>/osSkip} + ${sourceUnderstanding>/osTop} &lt; ${sourceUnderstanding>/osTotal} }"
+                                        class="sapUiSmallMarginEnd"/>
+                                    <Text text="{sourceUnderstanding>/osRangeText}"/>
+                                </HBox>
+                                <ScrollContainer
+                                    horizontal="true"
+                                    vertical="false"
+                                    width="100%">
+                                    <VBox id="osRecordsHolder"/>
+                                </ScrollContainer>
+                            </IconTabFilter>
+
+                            <IconTabFilter key="fields" text="Fields ({sourceUnderstanding>/fieldsCount})" icon="sap-icon://table-chart">
+                                <Table
+                                    id="sourceFieldsTable"
+                                    items="{sourceUnderstanding>/sourceFields}"
+                                    growing="true"
+                                    growingThreshold="30"
+                                    noDataText="No field metadata for this API."
+                                    class="runsTable">
+                                    <columns>
+                                        <Column><Text text="Field Name"/></Column>
+                                        <Column><Text text="Data Type"/></Column>
+                                        <Column><Text text="Length"/></Column>
+                                        <Column><Text text="Nullable"/></Column>
+                                        <Column><Text text="Description"/></Column>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{sourceUnderstanding>fieldName}" class="runIdText"/>
+                                                <Text text="{sourceUnderstanding>dataType}"/>
+                                                <Text text="{sourceUnderstanding>length}"/>
+                                                <ObjectStatus
+                                                    text="{ path: 'sourceUnderstanding>nullable', formatter: '.formatNullable' }"
+                                                    state="{ path: 'sourceUnderstanding>nullable', formatter: '.formatNullableState' }"/>
+                                                <Text text="{sourceUnderstanding>description}"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </IconTabFilter>
+
+                            <IconTabFilter key="profiling" text="Profiling" icon="sap-icon://electronic-medical-record">
+                                <MessageStrip
+                                    text="{sourceUnderstanding>/profile/message}"
+                                    type="{sourceUnderstanding>/profile/messageType}"
+                                    showIcon="true"
+                                    visible="{= !!${sourceUnderstanding>/profile/message} }"
+                                    class="sapUiSmallMarginBottom"/>
+
+                                <VBox visible="{= !!${sourceUnderstanding>/profile/ready} }">
+                                    <HBox alignItems="Center" wrap="Wrap" class="sapUiSmallMarginBottom">
+                                        <ObjectStatus
+                                            title="Indicative quality score"
+                                            text="{sourceUnderstanding>/profile/scoreText}"
+                                            state="{sourceUnderstanding>/profile/scoreState}"
+                                            inverted="true"
+                                            class="sapUiMediumMarginEnd"/>
+                                        <Text text="{sourceUnderstanding>/profile/scoreDetail}"/>
+                                    </HBox>
+
+                                    <Title text="What the data shows" level="H3" class="sapUiTinyMarginBottom"/>
+                                    <VBox items="{sourceUnderstanding>/profile/findings}" class="sapUiSmallMarginBottom">
+                                        <Text text="• {sourceUnderstanding>text}" class="sapUiTinyMarginBottom"/>
+                                    </VBox>
+
+                                    <OverflowToolbar class="sapUiTinyMarginBottom">
+                                        <Title text="Fields ({= (${sourceUnderstanding>/profile/fields} || []).length })" level="H3"/>
+                                        <ToolbarSpacer/>
+                                        <SegmentedButton selectedKey="{sourceUnderstanding>/profile/filter}" selectionChange=".onProfileFilter">
+                                            <items>
+                                                <SegmentedButtonItem key="ALL" text="All"/>
+                                                <SegmentedButtonItem key="PARTIAL" text="Partly filled"/>
+                                                <SegmentedButtonItem key="EMPTY" text="Always empty"/>
+                                                <SegmentedButtonItem key="ISSUES" text="With findings"/>
+                                            </items>
+                                        </SegmentedButton>
+                                    </OverflowToolbar>
+
+                                    <Table
+                                        id="profileFieldsTable"
+                                        items="{sourceUnderstanding>/profile/fields}"
+                                        growing="true"
+                                        growingThreshold="30"
+                                        noDataText="No field in this filter."
+                                        class="runsTable">
+                                        <columns>
+                                            <Column><Text text="Field"/></Column>
+                                            <Column width="11rem"><Text text="Filled"/></Column>
+                                            <Column width="6rem" hAlign="End"><Text text="Different values"/></Column>
+                                            <Column><Text text="Most frequent values"/></Column>
+                                            <Column><Text text="Findings"/></Column>
+                                        </columns>
+                                        <items>
+                                            <ColumnListItem>
+                                                <cells>
+                                                    <Text text="{sourceUnderstanding>name}" class="runIdText"/>
+                                                    <ProgressIndicator
+                                                        percentValue="{sourceUnderstanding>fillPct}"
+                                                        displayValue="{sourceUnderstanding>fillText}"
+                                                        state="{sourceUnderstanding>fillState}"
+                                                        showValue="true"/>
+                                                    <Text text="{sourceUnderstanding>distinctText}"/>
+                                                    <Text text="{sourceUnderstanding>topText}" maxLines="2"/>
+                                                    <Text text="{sourceUnderstanding>notes}"/>
+                                                </cells>
+                                            </ColumnListItem>
+                                        </items>
+                                    </Table>
+                                </VBox>
+                            </IconTabFilter>
+                        </items>
+                    </IconTabBar>
+                </VBox>
+
+            </layout:Grid>
+
+            <!-- NAVIGATION FOOTER -->
+            <HBox
+                justifyContent="SpaceBetween"
+                class="migrationActionContainer">
+                <Button
+                    text="Back to Business Objects"
+                    icon="sap-icon://navigation-left-arrow"
+                    type="Transparent"
+                    press=".onBackToBusinessObjects"/>
+                <Button
+                    text="Continue to Data Profiling"
+                    icon="sap-icon://navigation-right-arrow"
+                    type="Emphasized"
+                    press=".onContinueToData"/>
+            </HBox>
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,212 @@
+<mvc:View
+    controllerName="project1.controller.ObjectStore"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page
+        id="objectStorePage"
+        showHeader="false">
+        <content>
+
+            <!-- TITLE -->
+            <VBox class="sectionContainer">
+                <OverflowToolbar>
+                    <Title text="Object Store" level="H1" class="sectionTitle"/>
+                    <ToolbarSpacer/>
+                    <Button text="Refresh" icon="sap-icon://refresh" press=".onRefresh" enabled="{= !${objectStore>/busy} }"/>
+                </OverflowToolbar>
+                <Text
+                    text="Where the extracted data of the migration is kept: how much, from which extraction, and what is inside. Read only."
+                    class="sectionDescription"/>
+                <ObjectStatus
+                    title="Storage"
+                    text="{= ${objectStore>/overview/storageKind} === 'OBJECT_STORE' ? 'Company Object Store (' + ${objectStore>/overview/region} + ')' : 'Local folder (no Object Store bound)' }"
+                    state="{= ${objectStore>/overview/storageKind} === 'OBJECT_STORE' ? 'Success' : 'Warning' }"
+                    visible="{= !!${objectStore>/ready} }"/>
+                <Text text="{objectStore>/overview/location}" class="runIdText" visible="{= !!${objectStore>/ready} }"/>
+                <MessageStrip
+                    text="{objectStore>/message}"
+                    type="{objectStore>/messageType}"
+                    showIcon="true"
+                    visible="{= !!${objectStore>/message} }"
+                    class="sapUiSmallMarginTop"/>
+                <BusyIndicator visible="{objectStore>/busy}" size="1.5rem" class="sapUiSmallMarginTop"/>
+            </VBox>
+
+            <VBox visible="{= !!${objectStore>/ready} }">
+
+                <!-- SUMMARY -->
+                <HBox class="kpiContainer" wrap="Wrap">
+                    <VBox class="kpiCard">
+                        <Text text="Files" class="kpiLabel"/>
+                        <ObjectNumber number="{objectStore>/overview/totalFiles}" class="kpiNumber"/>
+                    </VBox>
+                    <VBox class="kpiCard">
+                        <Text text="Total size" class="kpiLabel"/>
+                        <ObjectNumber number="{objectStore>/overview/sizeText}" class="kpiNumber"/>
+                    </VBox>
+                    <VBox class="kpiCard">
+                        <Text text="Extractions" class="kpiLabel"/>
+                        <ObjectNumber number="{objectStore>/overview/extractionCount}" class="kpiNumber"/>
+                    </VBox>
+                    <VBox class="kpiCard">
+                        <Text text="Excel exports" class="kpiLabel"/>
+                        <ObjectNumber number="{objectStore>/overview/exportCount}" class="kpiNumber"/>
+                    </VBox>
+                    <VBox class="kpiCard">
+                        <Text text="Problems" class="kpiLabel"/>
+                        <ObjectStatus
+                            text="{objectStore>/overview/problemCount}"
+                            state="{= ${objectStore>/overview/problemCount} > 0 ? 'Error' : 'Success' }"
+                            inverted="true"/>
+                    </VBox>
+                    <VBox class="kpiCard">
+                        <Text text="Last write" class="kpiLabel"/>
+                        <Text text="{objectStore>/lastWriteText}"/>
+                    </VBox>
+                </HBox>
+
+                <!-- WHAT IS WHERE -->
+                <VBox class="sectionContainer">
+                    <Title text="What is stored" level="H2" class="sectionTitle"/>
+                    <Table items="{objectStore>/areas}" class="runsTable">
+                        <columns>
+                            <Column><Text text="Area"/></Column>
+                            <Column hAlign="End" width="8rem"><Text text="Items"/></Column>
+                            <Column hAlign="End" width="8rem"><Text text="Files"/></Column>
+                            <Column hAlign="End" width="9rem"><Text text="Size"/></Column>
+                            <Column width="14rem"><Text text="Share of the storage"/></Column>
+                            <Column width="6rem"/>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <ObjectIdentifier title="{objectStore>label}" text="{objectStore>area}/"/>
+                                    <Text text="{objectStore>items}"/>
+                                    <Text text="{objectStore>files}"/>
+                                    <Text text="{objectStore>sizeText}"/>
+                                    <ProgressIndicator percentValue="{objectStore>percent}" displayValue="{objectStore>percentText}" state="None"/>
+                                    <Button text="Open" icon="sap-icon://folder-full" type="Transparent" press=".onOpenArea"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </VBox>
+
+                <!-- TABS -->
+                <VBox class="sectionContainer">
+                    <IconTabBar id="storeTabs" selectedKey="extractions" expandable="false" headerMode="Inline" select=".onTabSelect">
+                        <items>
+
+                            <!-- EXTRACTIONS -->
+                            <IconTabFilter key="extractions" text="Extractions ({objectStore>/overview/extractionCount})" icon="sap-icon://database">
+                                <Text text="Each extraction is one run of 'Extract to Object Store'. Newer runs never overwrite older ones." class="sapUiSmallMarginBottom"/>
+                                <Table items="{objectStore>/extractions}" growing="true" growingThreshold="30" noDataText="No extraction yet." class="runsTable">
+                                    <columns>
+                                        <Column><Text text="Extraction"/></Column>
+                                        <Column><Text text="Business object"/></Column>
+                                        <Column><Text text="Source"/></Column>
+                                        <Column><Text text="Started"/></Column>
+                                        <Column><Text text="Status"/></Column>
+                                        <Column hAlign="End"><Text text="APIs"/></Column>
+                                        <Column hAlign="End"><Text text="Records"/></Column>
+                                        <Column hAlign="End"><Text text="Files"/></Column>
+                                        <Column hAlign="End"><Text text="Size"/></Column>
+                                        <Column hAlign="End"><Text text="Excel exports"/></Column>
+                                        <Column width="5rem"/>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <Text text="{objectStore>extractionId}" class="runIdText"/>
+                                                <Text text="{objectStore>businessObject}"/>
+                                                <Text text="{objectStore>sourceSystem}"/>
+                                                <Text text="{objectStore>startedText}"/>
+                                                <ObjectStatus text="{objectStore>status}" state="{objectStore>statusState}"/>
+                                                <Text text="{objectStore>apis}"/>
+                                                <Text text="{objectStore>records}"/>
+                                                <Text text="{objectStore>files}"/>
+                                                <Text text="{objectStore>sizeText}"/>
+                                                <Text text="{objectStore>exportFiles}"/>
+                                                <Button icon="sap-icon://folder-full" tooltip="Open the folder" type="Transparent" press=".onOpenExtraction"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </IconTabFilter>
+
+                            <!-- EXPLORER -->
+                            <IconTabFilter key="explorer" text="Explorer" icon="sap-icon://folder-blank">
+                                <OverflowToolbar class="sapUiTinyMarginBottom">
+                                    <Button icon="sap-icon://nav-back" tooltip="One folder up" press=".onFolderUp" enabled="{= ${objectStore>/folder/prefix} !== '' }"/>
+                                    <HBox items="{objectStore>/crumbs}" alignItems="Center" wrap="Wrap">
+                                        <Link text="{objectStore>text}" press=".onCrumb" class="sapUiTinyMarginEnd"/>
+                                    </HBox>
+                                    <ToolbarSpacer/>
+                                    <Text text="{objectStore>/folder/summary}"/>
+                                </OverflowToolbar>
+
+                                <Table
+                                    id="explorerTable"
+                                    items="{objectStore>/entries}"
+                                    growing="true"
+                                    growingThreshold="50"
+                                    noDataText="This folder is empty."
+                                    class="runsTable">
+                                    <columns>
+                                        <Column width="2.5rem"/>
+                                        <Column><Text text="Name"/></Column>
+                                        <Column><Text text="What it is"/></Column>
+                                        <Column hAlign="End" width="8rem"><Text text="Files / size"/></Column>
+                                        <Column width="12rem"><Text text="Last changed"/></Column>
+                                        <Column width="9rem"/>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem type="Active" press=".onEntryPress">
+                                            <cells>
+                                                <core:Icon src="{objectStore>icon}" color="{objectStore>iconColor}"/>
+                                                <Text text="{objectStore>name}" class="runIdText"/>
+                                                <Text text="{objectStore>description}" maxLines="2"/>
+                                                <Text text="{objectStore>sizeInfo}"/>
+                                                <Text text="{objectStore>modifiedText}"/>
+                                                <HBox visible="{= !${objectStore>isFolder} }">
+                                                    <Button icon="sap-icon://show" tooltip="Show what is inside" type="Transparent" press=".onPreviewFile"/>
+                                                    <Button icon="sap-icon://download" tooltip="Download" type="Transparent" press=".onDownloadFile"/>
+                                                </HBox>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </IconTabFilter>
+
+                            <!-- PROBLEMS -->
+                            <IconTabFilter key="problems" text="Problems ({objectStore>/overview/problemCount})" icon="sap-icon://message-warning" iconColor="{= ${objectStore>/overview/problemCount} > 0 ? 'Negative' : 'Positive' }">
+                                <Table items="{objectStore>/problems}" noDataText="No problems found: every extraction has a manifest and all its files." class="runsTable">
+                                    <columns>
+                                        <Column width="11rem"><Text text="Problem"/></Column>
+                                        <Column><Text text="What was found"/></Column>
+                                        <Column width="5rem"/>
+                                    </columns>
+                                    <items>
+                                        <ColumnListItem>
+                                            <cells>
+                                                <ObjectStatus text="{objectStore>typeText}" state="Error"/>
+                                                <Text text="{objectStore>message}"/>
+                                                <Button icon="sap-icon://folder-full" tooltip="Open the folder" type="Transparent" press=".onOpenProblem"/>
+                                            </cells>
+                                        </ColumnListItem>
+                                    </items>
+                                </Table>
+                            </IconTabFilter>
+
+                        </items>
+                    </IconTabBar>
+                </VBox>
+            </VBox>
+
+        </content>
+    </Page>
+</mvc:View>

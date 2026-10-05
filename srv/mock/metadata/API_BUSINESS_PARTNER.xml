@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  MOCK FIXTURE - TRIMMED $metadata OF API_BUSINESS_PARTNER (OData V2)
+
+  Follows the entity / navigation structure of the SAP released API, reduced
+  to the main entity types and fields. Used by S4SourceAdapter in MOCK mode
+  (S4_DISCOVERY_MODE=MOCK). In LIVE mode the real $metadata is read from S/4.
+
+  Like the real service, the associations carry no ReferentialConstraint,
+  so join keys are inferred by property name.
+-->
+<edmx:Edmx Version="1.0"
+    xmlns:edmx="http://schemas.microsoft.com/ado/2007/06/edmx"
+    xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+    xmlns:sap="http://www.sap.com/Protocols/SAPData">
+  <edmx:DataServices m:DataServiceVersion="2.0">
+    <Schema Namespace="API_BUSINESS_PARTNER" xml:lang="en" sap:schema-version="1"
+        xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+
+      <!-- ===================== Business Partner ===================== -->
+      <EntityType Name="A_BusinessPartnerType" sap:label="Business Partner" sap:content-version="1">
+        <Key><PropertyRef Name="BusinessPartner"/></Key>
+        <Property Name="BusinessPartner" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Business Partner" sap:quickinfo="Business Partner Number"/>
+        <Property Name="Customer" Type="Edm.String" MaxLength="10" sap:label="Customer" sap:quickinfo="Customer Number"/>
+        <Property Name="Supplier" Type="Edm.String" MaxLength="10" sap:label="Supplier" sap:quickinfo="Account Number of Supplier"/>
+        <Property Name="BusinessPartnerCategory" Type="Edm.String" MaxLength="1" sap:label="BP Category" sap:quickinfo="Business Partner Category"/>
+        <Property Name="BusinessPartnerFullName" Type="Edm.String" MaxLength="81" sap:label="Full Name" sap:quickinfo="Business Partner Full Name"/>
+        <Property Name="BusinessPartnerGrouping" Type="Edm.String" MaxLength="4" sap:label="Grouping" sap:quickinfo="Business Partner Grouping"/>
+        <Property Name="OrganizationBPName1" Type="Edm.String" MaxLength="40" sap:label="Name 1" sap:quickinfo="Name 1 of organization"/>
+        <Property Name="OrganizationBPName2" Type="Edm.String" MaxLength="40" sap:label="Name 2" sap:quickinfo="Name 2 of organization"/>
+        <Property Name="OrganizationBPName3" Type="Edm.String" MaxLength="40" sap:label="Name 3" sap:quickinfo="Name 3 of organization"/>
+        <Property Name="OrganizationBPName4" Type="Edm.String" MaxLength="40" sap:label="Name 4" sap:quickinfo="Name 4 of organization"/>
+        <Property Name="FirstName" Type="Edm.String" MaxLength="40" sap:label="First Name" sap:quickinfo="First name of business partner (person)"/>
+        <Property Name="LastName" Type="Edm.String" MaxLength="40" sap:label="Last Name" sap:quickinfo="Last name of business partner (person)"/>
+        <Property Name="SearchTerm1" Type="Edm.String" MaxLength="20" sap:label="Search Term 1" sap:quickinfo="Search Term 1 for Business Partner"/>
+        <Property Name="CorrespondenceLanguage" Type="Edm.String" MaxLength="2" sap:label="Language" sap:quickinfo="Business Partner: Correspondence Language"/>
+        <Property Name="BusinessPartnerIsBlocked" Type="Edm.Boolean" sap:label="Central Block" sap:quickinfo="Central Block for Business Partner"/>
+        <Property Name="IsMarkedForArchiving" Type="Edm.Boolean" sap:label="Archiving Flag" sap:quickinfo="Central Archiving Flag"/>
+        <Property Name="CreationDate" Type="Edm.DateTime" Precision="0" sap:label="Created On" sap:quickinfo="Date on which the object was created"/>
+        <NavigationProperty Name="to_BusinessPartnerAddress" Relationship="API_BUSINESS_PARTNER.assoc_BP_Address" FromRole="FromRole_BP_Address" ToRole="ToRole_BP_Address"/>
+        <NavigationProperty Name="to_BusinessPartnerRole" Relationship="API_BUSINESS_PARTNER.assoc_BP_Role" FromRole="FromRole_BP_Role" ToRole="ToRole_BP_Role"/>
+        <NavigationProperty Name="to_BusinessPartnerTax" Relationship="API_BUSINESS_PARTNER.assoc_BP_Tax" FromRole="FromRole_BP_Tax" ToRole="ToRole_BP_Tax"/>
+        <NavigationProperty Name="to_BusinessPartnerBank" Relationship="API_BUSINESS_PARTNER.assoc_BP_Bank" FromRole="FromRole_BP_Bank" ToRole="ToRole_BP_Bank"/>
+        <NavigationProperty Name="to_Customer" Relationship="API_BUSINESS_PARTNER.assoc_BP_Customer" FromRole="FromRole_BP_Customer" ToRole="ToRole_BP_Customer"/>
+      </EntityType>
+
+      <!-- ===================== Address ===================== -->
+      <EntityType Name="A_BusinessPartnerAddressType" sap:label="Business Partner Address" sap:content-version="1">
+        <Key><PropertyRef Name="BusinessPartner"/><PropertyRef Name="AddressID"/></Key>
+        <Property Name="BusinessPartner" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Business Partner" sap:quickinfo="Business Partner Number"/>
+        <Property Name="AddressID" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Address Number" sap:quickinfo="Addresses: Address Number"/>
+        <Property Name="ValidityStartDate" Type="Edm.DateTimeOffset" Precision="0" sap:label="Valid From" sap:quickinfo="Validity Start of a Business Partner Address"/>
+        <Property Name="StreetName" Type="Edm.String" MaxLength="60" sap:label="Street" sap:quickinfo="Street"/>
+        <Property Name="HouseNumber" Type="Edm.String" MaxLength="10" sap:label="House Number" sap:quickinfo="House Number"/>
+        <Property Name="StreetPrefixName" Type="Edm.String" MaxLength="40" sap:label="Street 2" sap:quickinfo="Street 2"/>
+        <Property Name="StreetSuffixName" Type="Edm.String" MaxLength="40" sap:label="Street 4" sap:quickinfo="Street 4"/>
+        <Property Name="CityName" Type="Edm.String" MaxLength="40" sap:label="City" sap:quickinfo="City"/>
+        <Property Name="PostalCode" Type="Edm.String" MaxLength="10" sap:label="Postal Code" sap:quickinfo="City Postal Code"/>
+        <Property Name="Region" Type="Edm.String" MaxLength="3" sap:label="Region" sap:quickinfo="Region (State, Province, County)"/>
+        <Property Name="Country" Type="Edm.String" MaxLength="3" sap:label="Country/Region Key" sap:quickinfo="Country/Region Key"/>
+        <Property Name="Language" Type="Edm.String" MaxLength="2" sap:label="Language Key" sap:quickinfo="Language Key"/>
+        <NavigationProperty Name="to_EmailAddress" Relationship="API_BUSINESS_PARTNER.assoc_Address_Email" FromRole="FromRole_Address_Email" ToRole="ToRole_Address_Email"/>
+        <NavigationProperty Name="to_PhoneNumber" Relationship="API_BUSINESS_PARTNER.assoc_Address_Phone" FromRole="FromRole_Address_Phone" ToRole="ToRole_Address_Phone"/>
+      </EntityType>
+
+      <EntityType Name="A_AddressEmailAddressType" sap:label="Email Address" sap:content-version="1">
+        <Key><PropertyRef Name="AddressID"/><PropertyRef Name="Person"/><PropertyRef Name="OrdinalNumber"/></Key>
+        <Property Name="AddressID" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Address Number" sap:quickinfo="Addresses: Address Number"/>
+        <Property Name="Person" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Person Number" sap:quickinfo="Person Number"/>
+        <Property Name="OrdinalNumber" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="Sequence Number" sap:quickinfo="Sequence Number"/>
+        <Property Name="IsDefaultEmailAddress" Type="Edm.Boolean" sap:label="Standard No." sap:quickinfo="Flag: this address is the default address"/>
+        <Property Name="EmailAddress" Type="Edm.String" MaxLength="241" sap:label="Email Address" sap:quickinfo="Email Address"/>
+      </EntityType>
+
+      <EntityType Name="A_AddressPhoneNumberType" sap:label="Phone Number" sap:content-version="1">
+        <Key><PropertyRef Name="AddressID"/><PropertyRef Name="Person"/><PropertyRef Name="OrdinalNumber"/></Key>
+        <Property Name="AddressID" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Address Number" sap:quickinfo="Addresses: Address Number"/>
+        <Property Name="Person" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Person Number" sap:quickinfo="Person Number"/>
+        <Property Name="OrdinalNumber" Type="Edm.String" Nullable="false" MaxLength="3" sap:label="Sequence Number" sap:quickinfo="Sequence Number"/>
+        <Property Name="DestinationLocationCountry" Type="Edm.String" MaxLength="3" sap:label="Country/Region" sap:quickinfo="Country/Region for Telephone/Fax Number"/>
+        <Property Name="IsDefaultPhoneNumber" Type="Edm.Boolean" sap:label="Standard No." sap:quickinfo="Standard Sender Address in this Communication Type"/>
+        <Property Name="PhoneNumber" Type="Edm.String" MaxLength="30" sap:label="Telephone" sap:quickinfo="Telephone No.: Dialing Code + Number"/>
+        <Property Name="PhoneNumberExtension" Type="Edm.String" MaxLength="10" sap:label="Extension" sap:quickinfo="Telephone No.: Extension"/>
+        <Property Name="PhoneNumberType" Type="Edm.String" MaxLength="1" sap:label="Mobile Phone" sap:quickinfo="Telephone Number Type"/>
+      </EntityType>
+
+      <!-- ===================== Role / Tax / Bank ===================== -->
+      <EntityType Name="A_BusinessPartnerRoleType" sap:label="Business Partner Role" sap:content-version="1">
+        <Key><PropertyRef Name="BusinessPartner"/><PropertyRef Name="BusinessPartnerRole"/></Key>
+        <Property Name="BusinessPartner" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Business Partner" sap:quickinfo="Business Partner Number"/>
+        <Property Name="BusinessPartnerRole" Type="Edm.String" Nullable="false" MaxLength="6" sap:label="BP Role" sap:quickinfo="BP Role"/>
+        <Property Name="ValidFrom" Type="Edm.DateTimeOffset" Precision="0" sap:label="Valid From" sap:quickinfo="Validity Start of a BP Role"/>
+        <Property Name="ValidTo" Type="Edm.DateTimeOffset" Precision="0" sap:label="Valid To" sap:quickinfo="Validity End of a BP Role"/>
+      </EntityType>
+
+      <EntityType Name="A_BusinessPartnerTaxNumberType" sap:label="Tax Number" sap:content-version="1">
+        <Key><PropertyRef Name="BusinessPartner"/><PropertyRef Name="BPTaxType"/></Key>
+        <Property Name="BusinessPartner" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Business Partner" sap:quickinfo="Business Partner Number"/>
+        <Property Name="BPTaxType" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Tax Number Category" sap:quickinfo="Tax Number Category"/>
+        <Property Name="BPTaxNumber" Type="Edm.String" MaxLength="20" sap:label="Tax Number" sap:quickinfo="Business Partner Tax Number"/>
+        <Property Name="BPTaxLongNumber" Type="Edm.String" MaxLength="60" sap:label="Tax Number" sap:quickinfo="Business Partner Tax Number (long)"/>
+      </EntityType>
+
+      <EntityType Name="A_BusinessPartnerBankType" sap:label="Bank Details" sap:content-version="1">
+        <Key><PropertyRef Name="BusinessPartner"/><PropertyRef Name="BankIdentification"/></Key>
+        <Property Name="BusinessPartner" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Business Partner" sap:quickinfo="Business Partner Number"/>
+        <Property Name="BankIdentification" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Bank Details ID" sap:quickinfo="Bank details ID"/>
+        <Property Name="BankCountryKey" Type="Edm.String" MaxLength="3" sap:label="Bank Country/Region" sap:quickinfo="Bank Country/Region Key"/>
+        <Property Name="BankNumber" Type="Edm.String" MaxLength="15" sap:label="Bank Key" sap:quickinfo="Bank Keys"/>
+        <Property Name="BankAccount" Type="Edm.String" MaxLength="18" sap:label="Bank Account" sap:quickinfo="Bank Account Number"/>
+        <Property Name="IBAN" Type="Edm.String" MaxLength="34" sap:label="IBAN" sap:quickinfo="IBAN (International Bank Account Number)"/>
+        <Property Name="SWIFTCode" Type="Edm.String" MaxLength="11" sap:label="SWIFT/BIC" sap:quickinfo="SWIFT/BIC for International Payments"/>
+        <Property Name="BankAccountHolderName" Type="Edm.String" MaxLength="60" sap:label="Account Holder" sap:quickinfo="Account Holder Name"/>
+      </EntityType>
+
+      <!-- ===================== Customer ===================== -->
+      <EntityType Name="A_CustomerType" sap:label="Customer" sap:content-version="1">
+        <Key><PropertyRef Name="Customer"/></Key>
+        <Property Name="Customer" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Customer" sap:quickinfo="Customer Number"/>
+        <Property Name="CustomerAccountGroup" Type="Edm.String" MaxLength="4" sap:label="Account Group" sap:quickinfo="Customer Account Group"/>
+        <Property Name="CustomerClassification" Type="Edm.String" MaxLength="2" sap:label="Customer Classific." sap:quickinfo="Customer Classification"/>
+        <Property Name="DeletionIndicator" Type="Edm.Boolean" sap:label="Central Deletion Flag" sap:quickinfo="Central Deletion Flag for Master Record"/>
+        <Property Name="OrderIsBlockedForCustomer" Type="Edm.String" MaxLength="2" sap:label="Order Block" sap:quickinfo="Central Order Block for Customer"/>
+        <Property Name="PostingIsBlocked" Type="Edm.Boolean" sap:label="Posting Block" sap:quickinfo="Central Posting Block"/>
+        <NavigationProperty Name="to_CustomerCompany" Relationship="API_BUSINESS_PARTNER.assoc_Customer_Company" FromRole="FromRole_Customer_Company" ToRole="ToRole_Customer_Company"/>
+        <NavigationProperty Name="to_CustomerSalesArea" Relationship="API_BUSINESS_PARTNER.assoc_Customer_SalesArea" FromRole="FromRole_Customer_SalesArea" ToRole="ToRole_Customer_SalesArea"/>
+      </EntityType>
+
+      <EntityType Name="A_CustomerCompanyType" sap:label="Customer Company" sap:content-version="1">
+        <Key><PropertyRef Name="Customer"/><PropertyRef Name="CompanyCode"/></Key>
+        <Property Name="Customer" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Customer" sap:quickinfo="Customer Number"/>
+        <Property Name="CompanyCode" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Company Code" sap:quickinfo="Company Code"/>
+        <Property Name="ReconciliationAccount" Type="Edm.String" MaxLength="10" sap:label="Reconciliation Acct" sap:quickinfo="Reconciliation Account in General Ledger"/>
+        <Property Name="PaymentTerms" Type="Edm.String" MaxLength="4" sap:label="Terms of Payment" sap:quickinfo="Terms of Payment Key"/>
+        <Property Name="PaymentMethodsList" Type="Edm.String" MaxLength="10" sap:label="Payment Methods" sap:quickinfo="List of the Payment Methods to be Considered"/>
+        <Property Name="AccountingClerk" Type="Edm.String" MaxLength="2" sap:label="Accounting Clerk" sap:quickinfo="Accounting Clerk Abbreviation"/>
+        <Property Name="DeletionIndicator" Type="Edm.Boolean" sap:label="Deletion Flag" sap:quickinfo="Deletion Flag for Master Record (Company Code Level)"/>
+      </EntityType>
+
+      <EntityType Name="A_CustomerSalesAreaType" sap:label="Customer Sales Area" sap:content-version="1">
+        <Key><PropertyRef Name="Customer"/><PropertyRef Name="SalesOrganization"/><PropertyRef Name="DistributionChannel"/><PropertyRef Name="Division"/></Key>
+        <Property Name="Customer" Type="Edm.String" Nullable="false" MaxLength="10" sap:label="Customer" sap:quickinfo="Customer Number"/>
+        <Property Name="SalesOrganization" Type="Edm.String" Nullable="false" MaxLength="4" sap:label="Sales Organization" sap:quickinfo="Sales Organization"/>
+        <Property Name="DistributionChannel" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Distribution Channel" sap:quickinfo="Distribution Channel"/>
+        <Property Name="Division" Type="Edm.String" Nullable="false" MaxLength="2" sap:label="Division" sap:quickinfo="Division"/>
+        <Property Name="Currency" Type="Edm.String" MaxLength="5" sap:label="Currency" sap:quickinfo="Currency"/>
+        <Property Name="CustomerPaymentTerms" Type="Edm.String" MaxLength="4" sap:label="Terms of Payment" sap:quickinfo="Customer Payment Terms"/>
+        <Property Name="IncotermsClassification" Type="Edm.String" MaxLength="3" sap:label="Incoterms" sap:quickinfo="Incoterms (Part 1)"/>
+        <Property Name="CustomerGroup" Type="Edm.String" MaxLength="2" sap:label="Customer Group" sap:quickinfo="Customer Group"/>
+        <Property Name="ShippingCondition" Type="Edm.String" MaxLength="2" sap:label="Shipping Conditions" sap:quickinfo="Shipping Conditions"/>
+      </EntityType>
+
+      <!-- ===================== Associations (no ReferentialConstraint, as in the real API) ===================== -->
+      <Association Name="assoc_BP_Address">
+        <End Type="API_BUSINESS_PARTNER.A_BusinessPartnerType" Multiplicity="1" Role="FromRole_BP_Address"/>
+        <End Type="API_BUSINESS_PARTNER.A_BusinessPartnerAddressType" Multiplicity="*" Role="ToRole_BP_Address"/>
+      </Association>
+      <Association Name="assoc_BP_Role">
+        <End Type="API_BUSINESS_PARTNER.A_BusinessPartnerType" Multiplicity="1" Role="FromRole_BP_Role"/>
+        <End Type="API_BUSINESS_PARTNER.A_BusinessPartnerRoleType" Multiplicity="*" Role="ToRole_BP_Role"/>
+      </Association>
+      <Association Name="assoc_BP_Tax">
+        <End Type="API_BUSINESS_PARTNER.A_BusinessPartnerType" Multiplicity="1" Role="FromRole_BP_Tax"/>
+        <End Type="API_BUSINESS_PARTNER.A_BusinessPartnerTaxNumberType" Multiplicity="*" Role="ToRole_BP_Tax"/>
+      </Association>
+      <Association Name="assoc_BP_Bank">
+        <End Type="API_BUSINESS_PARTNER.A_BusinessPartnerType" Multiplicity="1" Role="FromRole_BP_Bank"/>
+        <End Type="API_BUSINESS_PARTNER.A_BusinessPartnerBankType" Multiplicity="*" Role="ToRole_BP_Bank"/>
+      </Association>
+      <Association Name="assoc_BP_Customer">
+        <End Type="API_BUSINESS_PARTNER.A_BusinessPartnerType" Multiplicity="1" Role="FromRole_BP_Customer"/>
+        <End Type="API_BUSINESS_PARTNER.A_CustomerType" Multiplicity="0..1" Role="ToRole_BP_Customer"/>
+      </Association>
+      <Association Name="assoc_Address_Email">
+        <End Type="API_BUSINESS_PARTNER.A_BusinessPartnerAddressType" Multiplicity="1" Role="FromRole_Address_Email"/>
+        <End Type="API_BUSINESS_PARTNER.A_AddressEmailAddressType" Multiplicity="*" Role="ToRole_Address_Email"/>
+      </Association>
+      <Association Name="assoc_Address_Phone">
+        <End Type="API_BUSINESS_PARTNER.A_BusinessPartnerAddressType" Multiplicity="1" Role="FromRole_Address_Phone"/>
+        <End Type="API_BUSINESS_PARTNER.A_AddressPhoneNumberType" Multiplicity="*" Role="ToRole_Address_Phone"/>
+      </Association>
+      <Association Name="assoc_Customer_Company">
+        <End Type="API_BUSINESS_PARTNER.A_CustomerType" Multiplicity="1" Role="FromRole_Customer_Company"/>
+        <End Type="API_BUSINESS_PARTNER.A_CustomerCompanyType" Multiplicity="*" Role="ToRole_Customer_Company"/>
+      </Association>
+      <Association Name="assoc_Customer_SalesArea">
+        <End Type="API_BUSINESS_PARTNER.A_CustomerType" Multiplicity="1" Role="FromRole_Customer_SalesArea"/>
+        <End Type="API_BUSINESS_PARTNER.A_CustomerSalesAreaType" Multiplicity="*" Role="ToRole_Customer_SalesArea"/>
+      </Association>
+
+      <!-- ===================== Container ===================== -->
+      <EntityContainer Name="API_BUSINESS_PARTNER_Entities" m:IsDefaultEntityContainer="true">
+        <EntitySet Name="A_BusinessPartner" EntityType="API_BUSINESS_PARTNER.A_BusinessPartnerType" sap:label="Business Partner"/>
+        <EntitySet Name="A_BusinessPartnerAddress" EntityType="API_BUSINESS_PARTNER.A_BusinessPartnerAddressType" sap:label="Business Partner Address"/>
+        <EntitySet Name="A_AddressEmailAddress" EntityType="API_BUSINESS_PARTNER.A_AddressEmailAddressType" sap:label="Email Address"/>
+        <EntitySet Name="A_AddressPhoneNumber" EntityType="API_BUSINESS_PARTNER.A_AddressPhoneNumberType" sap:label="Phone Number"/>
+        <EntitySet Name="A_BusinessPartnerRole" EntityType="API_BUSINESS_PARTNER.A_BusinessPartnerRoleType" sap:label="Business Partner Role"/>
+        <EntitySet Name="A_BusinessPartnerTaxNumber" EntityType="API_BUSINESS_PARTNER.A_BusinessPartnerTaxNumberType" sap:label="Tax Number"/>
+        <EntitySet Name="A_BusinessPartnerBank" EntityType="API_BUSINESS_PARTNER.A_BusinessPartnerBankType" sap:label="Bank Details"/>
+        <EntitySet Name="A_Customer" EntityType="API_BUSINESS_PARTNER.A_CustomerType" sap:label="Customer"/>
+        <EntitySet Name="A_CustomerCompany" EntityType="API_BUSINESS_PARTNER.A_CustomerCompanyType" sap:label="Customer Company"/>
+        <EntitySet Name="A_CustomerSalesArea" EntityType="API_BUSINESS_PARTNER.A_CustomerSalesAreaType" sap:label="Customer Sales Area"/>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

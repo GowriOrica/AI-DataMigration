@@ -1,0 +1,115 @@
+<mvc:View
+    controllerName="project1.controller.Cleansing"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+
+    <Page id="cleansingPage" showHeader="false">
+        <content>
+
+            <!-- TITLE -->
+            <VBox class="sectionContainer">
+                <Title
+                    text="{= 'Cleansing' + (${migrationContext>/assessedBusinessObject} ? ' – ' + ${migrationContext>/assessedBusinessObject} : '') }"
+                    level="H1"
+                    class="sectionTitle"/>
+                <Text
+                    text="The rules of the functional team that correct and filter the extracted data before it is mapped. A rule set has versions: DRAFT is being worked on, APPROVED is the one the migration uses. The extracted data and the source system are never changed."
+                    class="sectionDescription"/>
+
+                <OverflowToolbar class="sapUiSmallMarginTop">
+                    <Label text="Version"/>
+                    <Select
+                        width="22rem"
+                        visible="{= ${cleansing>/sets}.length > 0 }"
+                        selectedKey="{cleansing>/selectedSetId}"
+                        change=".onSetChange"
+                        items="{cleansing>/sets}">
+                        <core:Item key="{cleansing>ID}" text="{cleansing>text}"/>
+                    </Select>
+                    <ObjectStatus
+                        visible="{= !!${cleansing>/selectedSetId} }"
+                        text="{cleansing>/current/status}"
+                        state="{cleansing>/current/state}"
+                        inverted="true"/>
+                    <ToolbarSpacer/>
+                    <Button text="Add rule" icon="sap-icon://add" press=".onAddRule" enabled="{= !!${cleansing>/ready} &amp;&amp; !${cleansing>/busy} }"/>
+                    <Button text="New version" icon="sap-icon://duplicate" press=".onNewVersion" visible="{= ${cleansing>/current/status} === 'APPROVED' }" enabled="{= !${cleansing>/busy} }"/>
+                    <Button text="Approve" icon="sap-icon://accept" type="Emphasized" press=".onApprove" visible="{= ${cleansing>/current/status} === 'DRAFT' }" enabled="{= !${cleansing>/busy} }"/>
+                    <Button text="Preview the effect" icon="sap-icon://play" press=".onPreview" visible="{= !!${cleansing>/selectedSetId} }" enabled="{= !${cleansing>/busy} }"/>
+                </OverflowToolbar>
+
+                <MessageStrip text="{cleansing>/message}" type="{cleansing>/messageType}" showIcon="true" visible="{= !!${cleansing>/message} }" class="sapUiSmallMarginTop"/>
+                <BusyIndicator visible="{cleansing>/busy}" size="1.5rem" class="sapUiSmallMarginTop"/>
+            </VBox>
+
+            <!-- RULES -->
+            <VBox class="sectionContainer" visible="{= ${cleansing>/rules}.length > 0 }">
+                <Title text="Rules ({cleansing>/rules/length})" level="H2" class="sectionTitle"/>
+                <Table items="{cleansing>/rules}" class="runsTable" growing="true" growingThreshold="50">
+                    <columns>
+                        <Column width="7rem"><Text text="Rule"/></Column>
+                        <Column width="10rem"><Text text="Source system / entity"/></Column>
+                        <Column><Text text="Field"/></Column>
+                        <Column width="9rem"><Text text="Does"/></Column>
+                        <Column><Text text="Parameter / condition"/></Column>
+                        <Column width="6rem"><Text text="If it fails"/></Column>
+                        <Column><Text text="Why"/></Column>
+                        <Column width="6rem"/>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <ObjectIdentifier title="{cleansing>ruleId}" text="{cleansing>ruleGroup}"/>
+                                <Text text="{cleansing>sourceSystem} / {cleansing>sourceEntity}"/>
+                                <Text text="{= ${cleansing>field} || '(whole record)' }"/>
+                                <Text text="{cleansing>ruleType}"/>
+                                <Text text="{= ${cleansing>condition} || ${cleansing>parameter} }"/>
+                                <Text text="{cleansing>onFailure}"/>
+                                <Text text="{cleansing>reason}" maxLines="2"/>
+                                <HBox visible="{= ${cleansing>/current/status} === 'DRAFT' }">
+                                    <Button icon="sap-icon://edit" type="Transparent" tooltip="Change" press=".onEditRule"/>
+                                    <Button icon="sap-icon://delete" type="Transparent" tooltip="Remove" press=".onDeleteRule"/>
+                                </HBox>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+
+            <!-- WHAT THE RULES WOULD DO -->
+            <VBox class="sectionContainer" visible="{= !!${cleansing>/preview/ready} }">
+                <Title text="What the rules would do on the last extraction" level="H2" class="sectionTitle"/>
+                <Text text="{cleansing>/preview/message}" class="sapUiSmallMarginBottom"/>
+                <Table items="{cleansing>/preview/rows}" class="runsTable" growing="true" growingThreshold="50">
+                    <columns>
+                        <Column width="7rem"><Text text="Rule"/></Column>
+                        <Column><Text text="API"/></Column>
+                        <Column><Text text="Field"/></Column>
+                        <Column hAlign="End" width="6rem"><Text text="Checked"/></Column>
+                        <Column hAlign="End" width="6rem"><Text text="Changed"/></Column>
+                        <Column hAlign="End" width="6rem"><Text text="Left out"/></Column>
+                        <Column hAlign="End" width="6rem"><Text text="Issues"/></Column>
+                        <Column><Text text="Example (before → after)"/></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <ObjectIdentifier title="{cleansing>ruleId}" text="{cleansing>rule}"/>
+                                <Text text="{cleansing>objectName}"/>
+                                <Text text="{cleansing>field}"/>
+                                <Text text="{cleansing>evaluated}"/>
+                                <Text text="{cleansing>changed}"/>
+                                <Text text="{cleansing>excluded}"/>
+                                <ObjectStatus text="{cleansing>issues}" state="{= ${cleansing>issues} > 0 ? 'Warning' : 'None' }"/>
+                                <Text text="{cleansing>example}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+            </VBox>
+
+        </content>
+    </Page>
+</mvc:View>

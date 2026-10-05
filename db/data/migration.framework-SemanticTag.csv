@@ -1,0 +1,47 @@
+code;domain;description;dataClass;isPersonal
+meta.sourceSystem;meta;System the record originates from;CODE;false
+party.legacyId;party;Business key of the party in the source system;ID;false
+party.category;party;Party category (organization, person, group);CODE;false
+party.name;party;Primary name of the party;TEXT;true
+party.nameAdditional;party;Additional name line of the party;TEXT;true
+party.searchTerm;party;Short search term / alias;TEXT;false
+party.language;party;Correspondence language;CODE;false
+party.status;party;Lifecycle status in the source system;CODE;false
+party.blocked;party;Party is blocked / inactive;FLAG;false
+party.role;party;Role of the party (customer, supplier, contact);CODE;false
+party.roleValidFrom;party;Start of validity of a party role;DATE;false
+address.id;address;Identifier of an address within a party;ID;false
+address.usage;address;Usage of the address (standard, bill-to, ship-to);CODE;false
+address.street;address;Street name;TEXT;true
+address.houseNumber;address;House number;TEXT;true
+address.line;address;Additional free address line;TEXT;true
+address.city;address;City / town;TEXT;false
+address.postalCode;address;Postal code;TEXT;false
+address.region;address;Region / state / province;CODE;false
+address.country;address;Country (ISO code);CODE;false
+address.isStandard;address;Address is the standard address of the party;FLAG;false
+comm.type;comm;Communication type (phone, mobile, fax, email);CODE;false
+comm.value;comm;Phone number, fax number or email address;TEXT;true
+comm.isDefault;comm;Communication entry is the default of its type;FLAG;false
+tax.category;tax;Tax number category (VAT, ABN, GST ...);CODE;false
+tax.number;tax;Tax registration number;TEXT;false
+tax.country;tax;Country issuing the tax number;CODE;false
+bank.accountId;bank;Identifier of a bank account within a party;ID;false
+bank.country;bank;Country of the bank;CODE;false
+bank.key;bank;Bank key / routing / BSB number;TEXT;false
+bank.account;bank;Bank account number;TEXT;true
+bank.iban;bank;IBAN;TEXT;true
+bank.holder;bank;Account holder name;TEXT;true
+org.companyCode;org;Company / legal entity;CODE;false
+org.salesOrg;org;Sales organization;CODE;false
+org.distributionChannel;org;Distribution channel;CODE;false
+org.division;org;Division;CODE;false
+finance.paymentTerms;finance;Payment terms (financial accounting);CODE;false
+finance.reconciliationAccount;finance;Reconciliation account / account group;CODE;false
+finance.dunningProcedure;finance;Dunning procedure;CODE;false
+finance.creditLimit;finance;Credit limit;AMOUNT;false
+finance.currency;finance;Currency of financial data;CODE;false
+sales.currency;sales;Sales currency;CODE;false
+sales.paymentTerms;sales;Payment terms (sales);CODE;false
+sales.incoterms;sales;Incoterms;CODE;false
+sales.customerGroup;sales;Customer group / classification;CODE;false

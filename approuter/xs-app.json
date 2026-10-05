@@ -1,0 +1,26 @@
+{
+  "welcomeFile": "/project1/index.html",
+  "authenticationMethod": "none",
+  "routes": [
+    {
+      "source": "^/migration/(.*)$",
+      "target": "/migration/$1",
+      "destination": "srv-api",
+      "authenticationType": "none",
+      "csrfProtection": false
+    },
+    {
+      "source": "^/project1/migration/(.*)$",
+      "target": "/migration/$1",
+      "destination": "srv-api",
+      "authenticationType": "none",
+      "csrfProtection": false
+    },
+    {
+      "source": "^(.*)$",
+      "target": "$1",
+      "service": "html5-apps-repo-rt",
+      "authenticationType": "none"
+    }
+  ]
+}

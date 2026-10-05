@@ -1,0 +1,286 @@
+<mvc:View
+    controllerName="project1.controller.RunDetails"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:layout="sap.ui.layout">
+
+    <Page
+        showHeader="false"
+        id="runDetailsPage"
+        title="Migration Run">
+
+
+
+        <content>
+
+
+            <!-- ================================================= -->
+            <!-- RUN HEADER -->
+            <!-- ================================================= -->
+
+            <VBox class="sectionContainer">
+
+                <Title
+                    text="Migration Run"
+                    level="H1"
+                    class="sectionTitle"/>
+
+                <Text
+                    text="Track the migration lifecycle from discovery through reconciliation."
+                    class="sectionDescription"/>
+
+
+                <Panel class="migrationPanel">
+
+                    <layout:Grid
+                        defaultSpan="XL3 L3 M6 S12"
+                        hSpacing="1"
+                        vSpacing="1">
+
+                        <VBox>
+
+                            <Label text="Run ID"/>
+
+                            <Text
+                                text="{runDetails>/runId}"
+                                class="runIdText"/>
+
+                        </VBox>
+
+
+                        <VBox>
+
+                            <Label text="Business Object"/>
+
+                            <Text
+                                text="{runDetails>/businessObject}"/>
+
+                        </VBox>
+
+
+                        <VBox>
+
+                            <Label text="Source"/>
+
+                            <Text
+                                text="{runDetails>/sourceSystem}"/>
+
+                        </VBox>
+
+
+                        <VBox>
+
+                            <Label text="Target"/>
+
+                            <Text
+                                text="{runDetails>/targetSystem}"/>
+
+                        </VBox>
+
+                    </layout:Grid>
+
+                </Panel>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- LIFECYCLE -->
+            <!-- ================================================= -->
+
+            <VBox class="sectionContainer">
+
+                <Title
+                    text="Migration Lifecycle"
+                    level="H2"
+                    class="sectionTitle"/>
+
+
+                <HBox
+                    class="lifecycleContainer"
+                    wrap="Wrap">
+
+                    <ObjectStatus
+                        text="1. Discovery"
+                        state="Success"
+                        class="lifecycleStep"/>
+
+                    <ObjectStatus
+                        text="2. Ingestion"
+                        state="Success"
+                        class="lifecycleStep"/>
+
+                    <ObjectStatus
+                        text="3. Profiling"
+                        state="Success"
+                        class="lifecycleStep"/>
+
+                    <ObjectStatus
+                        text="4. Mapping"
+                        state="Success"
+                        class="lifecycleStep"/>
+
+                    <ObjectStatus
+                        text="5. Transformation"
+                        state="Information"
+                        class="lifecycleStep"/>
+
+                    <ObjectStatus
+                        text="6. Validation"
+                        state="Information"
+                        class="lifecycleStep"/>
+
+                    <ObjectStatus
+                        text="7. Execution"
+                        state="None"
+                        class="lifecycleStep"/>
+
+                    <ObjectStatus
+                        text="8. Reconciliation"
+                        state="None"
+                        class="lifecycleStep"/>
+
+                </HBox>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- EXECUTION KPI -->
+            <!-- ================================================= -->
+
+            <HBox
+                class="kpiContainer"
+                wrap="Wrap">
+
+                <VBox class="kpiCard">
+
+                    <Text
+                        text="Source Records"
+                        class="kpiLabel"/>
+
+                    <ObjectNumber
+                        number="{runDetails>/sourceRecords}"
+                        class="kpiNumber"/>
+
+                </VBox>
+
+
+                <VBox class="kpiCard">
+
+                    <Text
+                        text="Processed"
+                        class="kpiLabel"/>
+
+                    <ObjectNumber
+                        number="{runDetails>/processedRecords}"
+                        class="kpiNumber"/>
+
+                </VBox>
+
+
+                <VBox class="kpiCard">
+
+                    <Text
+                        text="Validation Passed"
+                        class="kpiLabel"/>
+
+                    <ObjectNumber
+                        number="{runDetails>/validationPassed}"
+                        class="kpiNumber"/>
+
+                </VBox>
+
+
+                <VBox class="kpiCard">
+
+                    <Text
+                        text="Target Success"
+                        class="kpiLabel"/>
+
+                    <ObjectNumber
+                        number="{runDetails>/targetSuccess}"
+                        class="kpiNumber"/>
+
+                </VBox>
+
+            </HBox>
+
+
+            <!-- ================================================= -->
+            <!-- CURRENT STATUS -->
+            <!-- ================================================= -->
+
+            <VBox class="sectionContainer">
+
+                <Panel class="migrationPanel">
+
+                    <layout:Grid
+                        defaultSpan="XL4 L4 M6 S12"
+                        hSpacing="1"
+                        vSpacing="1">
+
+                        <VBox>
+
+                            <Label text="Current Status"/>
+
+                            <ObjectStatus
+                                text="{runDetails>/status}"
+                                state="{runDetails>/statusState}"/>
+
+                        </VBox>
+
+
+                        <VBox>
+
+                            <Label text="Current Stage"/>
+
+                            <Text
+                                text="{runDetails>/currentStage}"/>
+
+                        </VBox>
+
+
+                        <VBox>
+
+                            <Label text="Reconciliation"/>
+
+                            <ObjectStatus
+                                text="{runDetails>/reconciliationStatus}"
+                                state="{runDetails>/reconciliationState}"/>
+
+                        </VBox>
+
+                    </layout:Grid>
+
+                </Panel>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- ACTIONS -->
+            <!-- ================================================= -->
+
+            <HBox
+                justifyContent="End"
+                class="migrationActionContainer">
+
+                <Button
+                    text="Refresh Status"
+                    icon="sap-icon://refresh"
+                    press=".onRefresh"/>
+
+                <Button
+                    text="Back to Mapping"
+                    type="Transparent"
+                    press=".onBackToMapping"/>
+
+            </HBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

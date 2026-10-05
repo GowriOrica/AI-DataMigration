@@ -1,0 +1,169 @@
+{
+  "_comment": [
+    "Knowledge base for the rule-based semantic tagger.",
+    "phrases : words/phrases that indicate the tag in a field description or name. [phrase, weight] lowers the weight of generic phrases.",
+    "exclude : if the description contains one of these, the tag is not considered.",
+    "context : words in the STRUCTURE name that make this tag more likely (resolves e.g. sales vs finance payment terms).",
+    "keyOnly : tag applies only to key fields (identifiers).",
+    "Generic, system-independent knowledge - no customer- or source-specific mappings."
+  ],
+  "party.legacyId": {
+    "phrases": ["business partner number", "business partner", "customer number", "customer", "supplier number", "supplier", "vendor number", "vendor", "partner number"],
+    "keyOnly": true
+  },
+  "party.category": {
+    "phrases": ["business partner category", "bp category", "partner category", "partner type"]
+  },
+  "party.name": {
+    "phrases": ["name 1", "name1", "customer name", "supplier name", "organization name", "full name", "first name", "last name", ["name", 0.9]],
+    "exclude": ["search", "holder", "file", "user"]
+  },
+  "party.nameAdditional": {
+    "phrases": ["name 2", "name 3", "name 4", "name2", "name3", "name4", "additional name"]
+  },
+  "party.searchTerm": {
+    "phrases": ["search term", "search name", "short name", "alias"]
+  },
+  "party.language": {
+    "phrases": ["correspondence language", "language key", "language"]
+  },
+  "party.status": {
+    "phrases": ["status", "lifecycle status", "record status"]
+  },
+  "party.blocked": {
+    "phrases": ["central block", "posting block", "order block", "blocking code", "blocked", "block", "deletion flag"]
+  },
+  "party.role": {
+    "phrases": ["bp role", "business partner role", "partner role", "role"],
+    "exclude": ["validity", "valid"]
+  },
+  "party.roleValidFrom": {
+    "phrases": ["validity start of a bp role", "role valid from", "role validity start"]
+  },
+
+  "address.id": {
+    "phrases": ["address number", "address id", "address identifier"],
+    "keyOnly": true
+  },
+  "address.usage": {
+    "phrases": ["address type", "address usage"]
+  },
+  "address.street": {
+    "phrases": ["street name", "address line 1", "street"],
+    "exclude": ["street 2", "street 3", "street 4", "street 5"]
+  },
+  "address.houseNumber": {
+    "phrases": ["house number", "house no", "building number"]
+  },
+  "address.line": {
+    "phrases": ["address line 2", "address line 3", "address line 4", "street 2", "street 3", "street 4", "street 5", "address line"],
+    "exclude": ["line 1"]
+  },
+  "address.city": {
+    "phrases": ["city name", "city", "town"],
+    "exclude": ["postal"]
+  },
+  "address.postalCode": {
+    "phrases": ["postal code", "post code", "postcode", "zip code", "zip"]
+  },
+  "address.region": {
+    "phrases": ["region", "state", "province", "county"],
+    "exclude": ["country"]
+  },
+  "address.country": {
+    "phrases": ["country region key", "country key", "country"],
+    "exclude": ["bank", "tax", "telephone", "fax"]
+  },
+  "address.isStandard": {
+    "phrases": ["standard address", "main address", "primary address"]
+  },
+
+  "comm.type": {
+    "phrases": ["telephone number type", "communication type", "number type", "phone type"]
+  },
+  "comm.value": {
+    "phrases": ["email address", "e mail address", "email", "telephone number", "telephone no", "phone number", "telephone", "facsimile", "fax number", "mobile number"],
+    "exclude": ["extension", "country", "type", "sequence", "default", "standard", "flag"]
+  },
+  "comm.isDefault": {
+    "phrases": ["standard sender", "default email", "default phone", "standard no", "default"]
+  },
+
+  "tax.category": {
+    "phrases": ["tax number category", "tax category", "tax type"]
+  },
+  "tax.number": {
+    "phrases": ["vat registration number", "vat number", "tax number", "tax registration", "abn", "gst number"],
+    "exclude": ["category", "type"]
+  },
+  "tax.country": {
+    "phrases": ["tax country", "country of tax"]
+  },
+
+  "bank.accountId": {
+    "phrases": ["bank details id", "bank details", "bank account id"],
+    "keyOnly": true
+  },
+  "bank.country": {
+    "phrases": ["bank country region key", "bank country"]
+  },
+  "bank.key": {
+    "phrases": ["bank keys", "bank key", "bank number", "bsb", "routing number", "sort code"]
+  },
+  "bank.account": {
+    "phrases": ["bank account number", "bank account", "account number"],
+    "exclude": ["iban", "holder", "id", "supplier", "customer", "vendor", "partner"]
+  },
+  "bank.iban": {
+    "phrases": ["iban international bank account number", "iban"]
+  },
+  "bank.holder": {
+    "phrases": ["account holder name", "account holder"]
+  },
+
+  "org.companyCode": {
+    "phrases": ["company code", ["company", 0.75]]
+  },
+  "org.salesOrg": {
+    "phrases": ["sales organization", "sales organisation", "sales org"]
+  },
+  "org.distributionChannel": {
+    "phrases": ["distribution channel"]
+  },
+  "org.division": {
+    "phrases": ["division"]
+  },
+
+  "finance.paymentTerms": {
+    "phrases": ["terms of payment", "payment terms"],
+    "context": ["company", "financial", "finance", "accounting"]
+  },
+  "finance.reconciliationAccount": {
+    "phrases": ["reconciliation account", "recon account", "reconciliation acct"]
+  },
+  "finance.dunningProcedure": {
+    "phrases": ["dunning procedure", "dunning code", "dunning"]
+  },
+  "finance.creditLimit": {
+    "phrases": ["credit limit"]
+  },
+  "finance.currency": {
+    "phrases": ["currency"],
+    "context": ["company", "financial", "finance", "accounting"]
+  },
+
+  "sales.currency": {
+    "phrases": ["currency"],
+    "context": ["sales"]
+  },
+  "sales.paymentTerms": {
+    "phrases": ["terms of payment", "payment terms"],
+    "context": ["sales"]
+  },
+  "sales.incoterms": {
+    "phrases": ["incoterms"]
+  },
+  "sales.customerGroup": {
+    "phrases": ["customer group", "customer classification"]
+  }
+}

@@ -1,0 +1,209 @@
+<mvc:View
+    controllerName="project1.controller.DataProfiling"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page
+        id="dataProfilingPage"
+        showHeader="false">
+        <content>
+
+            <!-- TITLE -->
+            <VBox class="sectionContainer">
+                <Title
+                    text="{= 'Data Profiling' + (${migrationContext>/assessedBusinessObject} ? ' – ' + ${migrationContext>/assessedBusinessObject} : '') }"
+                    level="H1"
+                    class="sectionTitle"/>
+                <Text
+                    text="How complete and consistent the extracted data is. The server reads the files of the extraction from the Object Store and counts; no AI is involved and nothing is changed."
+                    class="sectionDescription"/>
+
+                <!-- EXTRACTION -->
+                <OverflowToolbar class="sapUiSmallMarginTop">
+                    <Label text="Extraction"/>
+                    <Select
+                        width="32rem"
+                        visible="{= ${dataProfiling>/extractions}.length > 0 }"
+                        selectedKey="{dataProfiling>/selectedExtractionId}"
+                        change=".onExtractionChange"
+                        items="{dataProfiling>/extractions}">
+                        <core:Item
+                            key="{dataProfiling>extractionId}"
+                            text="{dataProfiling>startedAtText} · {dataProfiling>totalRecords} records · {dataProfiling>status} · {dataProfiling>extractionId}"/>
+                    </Select>
+                    <ToolbarSpacer/>
+                    <Button
+                        text="Profile again"
+                        icon="sap-icon://refresh"
+                        enabled="{= !!${dataProfiling>/selectedExtractionId} &amp;&amp; !${dataProfiling>/busy} }"
+                        press=".onRunProfiling"/>
+                </OverflowToolbar>
+
+                <MessageStrip
+                    text="{dataProfiling>/message}"
+                    type="{dataProfiling>/messageType}"
+                    showIcon="true"
+                    visible="{= !!${dataProfiling>/message} }"
+                    class="sapUiSmallMarginTop"/>
+                <BusyIndicator
+                    visible="{dataProfiling>/busy}"
+                    size="1.5rem"
+                    class="sapUiSmallMarginTop"/>
+            </VBox>
+
+            <VBox visible="{= !!${dataProfiling>/ready} }">
+
+                <!-- SUMMARY OF THE WHOLE EXTRACTION -->
+                <HBox class="kpiContainer" wrap="Wrap">
+                    <VBox class="kpiCard">
+                        <Text text="Records profiled" class="kpiLabel"/>
+                        <ObjectNumber number="{dataProfiling>/summary/records}" class="kpiNumber"/>
+                    </VBox>
+                    <VBox class="kpiCard">
+                        <Text text="APIs" class="kpiLabel"/>
+                        <ObjectNumber number="{dataProfiling>/summary/apis}" class="kpiNumber"/>
+                    </VBox>
+                    <VBox class="kpiCard">
+                        <Text text="Fields always empty" class="kpiLabel"/>
+                        <ObjectNumber number="{dataProfiling>/summary/alwaysEmpty}" class="kpiNumber"/>
+                    </VBox>
+                    <VBox class="kpiCard">
+                        <Text text="Probable duplicate records" class="kpiLabel"/>
+                        <ObjectNumber number="{dataProfiling>/summary/probableDuplicates}" class="kpiNumber"/>
+                    </VBox>
+                    <VBox class="kpiCard">
+                        <Text text="Lowest quality score" class="kpiLabel"/>
+                        <ObjectStatus
+                            text="{dataProfiling>/summary/lowestScoreText}"
+                            state="{dataProfiling>/summary/lowestScoreState}"
+                            inverted="true"/>
+                    </VBox>
+                </HBox>
+
+                <!-- ONE ROW PER API -->
+                <VBox class="sectionContainer">
+                    <Title text="APIs of this extraction" level="H2" class="sectionTitle"/>
+                    <Text text="Select an API to see what the data shows and the profile of every field." class="sectionDescription"/>
+                    <Table
+                        id="profileApiTable"
+                        mode="SingleSelectMaster"
+                        selectionChange=".onApiSelect"
+                        items="{dataProfiling>/apiRows}"
+                        class="runsTable">
+                        <columns>
+                            <Column><Text text="API"/></Column>
+                            <Column hAlign="End"><Text text="Records"/></Column>
+                            <Column hAlign="End"><Text text="Fields"/></Column>
+                            <Column hAlign="End"><Text text="Always empty"/></Column>
+                            <Column hAlign="End"><Text text="Probable duplicates"/></Column>
+                            <Column width="9rem"><Text text="Quality score"/></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <ObjectIdentifier title="{dataProfiling>api}" text="{dataProfiling>note}"/>
+                                    <Text text="{dataProfiling>records}"/>
+                                    <Text text="{dataProfiling>fieldCount}"/>
+                                    <Text text="{dataProfiling>alwaysEmpty}"/>
+                                    <Text text="{dataProfiling>probableDuplicates}"/>
+                                    <ObjectStatus text="{dataProfiling>scoreText}" state="{dataProfiling>scoreState}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </VBox>
+
+                <!-- DETAIL OF THE SELECTED API -->
+                <VBox class="sectionContainer" visible="{= !!${dataProfiling>/detail/ready} }">
+                    <Title text="{dataProfiling>/selectedApi}" level="H2" class="sectionTitle"/>
+
+                    <MessageStrip
+                        text="{dataProfiling>/detail/message}"
+                        type="{dataProfiling>/detail/messageType}"
+                        showIcon="true"
+                        visible="{= !!${dataProfiling>/detail/message} }"
+                        class="sapUiSmallMarginBottom"/>
+
+                    <HBox alignItems="Center" wrap="Wrap" class="sapUiSmallMarginBottom">
+                        <ObjectStatus
+                            title="Indicative quality score"
+                            text="{dataProfiling>/detail/scoreText}"
+                            state="{dataProfiling>/detail/scoreState}"
+                            inverted="true"
+                            class="sapUiMediumMarginEnd"/>
+                        <Text text="{dataProfiling>/detail/scoreDetail}"/>
+                    </HBox>
+
+                    <Title text="What the data shows" level="H3" class="sapUiTinyMarginBottom"/>
+                    <VBox items="{dataProfiling>/detail/findings}" class="sapUiSmallMarginBottom">
+                        <Text text="• {dataProfiling>text}" class="sapUiTinyMarginBottom"/>
+                    </VBox>
+
+                    <OverflowToolbar class="sapUiTinyMarginBottom">
+                        <Title text="Fields ({= (${dataProfiling>/detail/fields} || []).length })" level="H3"/>
+                        <ToolbarSpacer/>
+                        <SegmentedButton selectedKey="{dataProfiling>/detail/filter}" selectionChange=".onProfileFilter">
+                            <items>
+                                <SegmentedButtonItem key="ALL" text="All"/>
+                                <SegmentedButtonItem key="PARTIAL" text="Partly filled"/>
+                                <SegmentedButtonItem key="EMPTY" text="Always empty"/>
+                                <SegmentedButtonItem key="ISSUES" text="With findings"/>
+                            </items>
+                        </SegmentedButton>
+                    </OverflowToolbar>
+
+                    <Table
+                        id="profileFieldsTable"
+                        items="{dataProfiling>/detail/fields}"
+                        growing="true"
+                        growingThreshold="30"
+                        noDataText="No field in this filter."
+                        class="runsTable">
+                        <columns>
+                            <Column><Text text="Field"/></Column>
+                            <Column width="11rem"><Text text="Filled"/></Column>
+                            <Column width="6rem" hAlign="End"><Text text="Different values"/></Column>
+                            <Column><Text text="Most frequent values"/></Column>
+                            <Column><Text text="Findings"/></Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem>
+                                <cells>
+                                    <Text text="{dataProfiling>name}" class="runIdText"/>
+                                    <ProgressIndicator
+                                        percentValue="{dataProfiling>fillPct}"
+                                        displayValue="{dataProfiling>fillText}"
+                                        state="{dataProfiling>fillState}"
+                                        showValue="true"/>
+                                    <Text text="{dataProfiling>distinctText}"/>
+                                    <Text text="{dataProfiling>topText}" maxLines="2"/>
+                                    <Text text="{dataProfiling>notes}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </VBox>
+            </VBox>
+
+            <!-- NAVIGATION FOOTER -->
+            <HBox
+                justifyContent="SpaceBetween"
+                class="migrationActionContainer">
+                <Button
+                    text="Back to Source Data"
+                    icon="sap-icon://navigation-left-arrow"
+                    type="Transparent"
+                    press=".onBackToSourceData"/>
+                <Button
+                    text="Continue to Target &amp; Mapping"
+                    icon="sap-icon://navigation-right-arrow"
+                    type="Emphasized"
+                    press=".onContinueToTarget"/>
+            </HBox>
+
+        </content>
+    </Page>
+</mvc:View>

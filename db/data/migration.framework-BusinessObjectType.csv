@@ -1,0 +1,2 @@
+code;name;description;signature
+BUSINESS_PARTNER;Business Partner;Organization or person with which the company has a business relationship (customer, supplier, contact), including addresses, roles, tax numbers, bank accounts, company code and sales area data.;"[""party.legacyId"",""party.name"",""address.city"",""address.country"",""tax.number"",""org.companyCode""]"

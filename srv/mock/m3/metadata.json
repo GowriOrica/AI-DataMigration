@@ -1,0 +1,142 @@
+{
+  "_comment": [
+    "MOCK FIXTURE - SYNTHETIC M3 MI PROGRAM CATALOG",
+    "Modelled on common Infor M3 conventions (MI programs, transactions, 4-6 character field codes).",
+    "Program, transaction and field names are ILLUSTRATIVE and must be verified against the client's M3.",
+    "keyFields is not part of real MI metadata: it stands in for the underlying table key (to verify when access exists).",
+    "Field types follow M3 metadata: A = alphanumeric, N = numeric, D = date (YYYYMMDD)."
+  ],
+  "system": {
+    "product": "Infor M3",
+    "metadataVersion": "MOCK-1"
+  },
+  "programs": [
+    {
+      "program": "CRS610MI",
+      "description": "Customer. Interface",
+      "transactions": [
+        {
+          "transaction": "LstByNumber",
+          "description": "List customers by customer number",
+          "type": "LIST",
+          "inputs": ["CONO", "CUNO"],
+          "keyFields": ["CONO", "CUNO"],
+          "outputs": [
+            { "field": "CONO", "description": "Company", "type": "N", "length": 3 },
+            { "field": "CUNO", "description": "Customer", "type": "A", "length": 10 },
+            { "field": "CUNM", "description": "Customer name", "type": "A", "length": 36 },
+            { "field": "CUA1", "description": "Customer address line 1", "type": "A", "length": 36 },
+            { "field": "CUA2", "description": "Customer address line 2", "type": "A", "length": 36 },
+            { "field": "CUA3", "description": "Customer address line 3", "type": "A", "length": 36 },
+            { "field": "CUA4", "description": "Customer address line 4", "type": "A", "length": 36 },
+            { "field": "TOWN", "description": "City", "type": "A", "length": 20 },
+            { "field": "PONO", "description": "Postal code", "type": "A", "length": 10 },
+            { "field": "ECAR", "description": "State", "type": "A", "length": 2 },
+            { "field": "CSCD", "description": "Country", "type": "A", "length": 3 },
+            { "field": "PHNO", "description": "Telephone number 1", "type": "A", "length": 16 },
+            { "field": "TFNO", "description": "Facsimile transmission number", "type": "A", "length": 16 },
+            { "field": "MAIL", "description": "Email address", "type": "A", "length": 60 },
+            { "field": "VRNO", "description": "VAT registration number", "type": "A", "length": 16 },
+            { "field": "LNCD", "description": "Language", "type": "A", "length": 2 },
+            { "field": "CUCD", "description": "Currency", "type": "A", "length": 3 },
+            { "field": "TEPY", "description": "Payment terms", "type": "A", "length": 3 },
+            { "field": "CUCL", "description": "Customer group", "type": "A", "length": 3 },
+            { "field": "CUTP", "description": "Customer type", "type": "N", "length": 1 },
+            { "field": "STAT", "description": "Status", "type": "A", "length": 2 },
+            { "field": "RGDT", "description": "Entry date", "type": "D", "length": 8 }
+          ]
+        },
+        {
+          "transaction": "GetFinancial",
+          "description": "Get customer financial data",
+          "type": "GET",
+          "inputs": ["CONO", "CUNO"],
+          "keyFields": ["CONO", "CUNO"],
+          "outputs": [
+            { "field": "CONO", "description": "Company", "type": "N", "length": 3 },
+            { "field": "CUNO", "description": "Customer", "type": "A", "length": 10 },
+            { "field": "DIVI", "description": "Division", "type": "A", "length": 3 },
+            { "field": "CRLM", "description": "Credit limit 1", "type": "N", "length": 15, "decimals": 2 },
+            { "field": "CRL2", "description": "Credit limit 2", "type": "N", "length": 15, "decimals": 2 },
+            { "field": "PYCD", "description": "Payment method - accounts receivable", "type": "A", "length": 3 },
+            { "field": "DUCD", "description": "Dunning code", "type": "A", "length": 1 },
+            { "field": "BLCD", "description": "Blocking code", "type": "N", "length": 1 },
+            { "field": "ACRF", "description": "User-defined accounting control object", "type": "A", "length": 8 }
+          ]
+        }
+      ]
+    },
+    {
+      "program": "OIS002MI",
+      "description": "Customer Address. Interface",
+      "transactions": [
+        {
+          "transaction": "LstAddress",
+          "description": "List customer addresses",
+          "type": "LIST",
+          "inputs": ["CONO", "CUNO"],
+          "keyFields": ["CONO", "CUNO", "ADRT", "ADID"],
+          "outputs": [
+            { "field": "CONO", "description": "Company", "type": "N", "length": 3 },
+            { "field": "CUNO", "description": "Customer", "type": "A", "length": 10 },
+            { "field": "ADRT", "description": "Address type", "type": "N", "length": 1 },
+            { "field": "ADID", "description": "Address number", "type": "A", "length": 6 },
+            { "field": "CUNM", "description": "Name", "type": "A", "length": 36 },
+            { "field": "CUA1", "description": "Address line 1", "type": "A", "length": 36 },
+            { "field": "CUA2", "description": "Address line 2", "type": "A", "length": 36 },
+            { "field": "TOWN", "description": "City", "type": "A", "length": 20 },
+            { "field": "PONO", "description": "Postal code", "type": "A", "length": 10 },
+            { "field": "ECAR", "description": "State", "type": "A", "length": 2 },
+            { "field": "CSCD", "description": "Country", "type": "A", "length": 3 },
+            { "field": "PHNO", "description": "Telephone number 1", "type": "A", "length": 16 },
+            { "field": "STDT", "description": "Standard address", "type": "N", "length": 1 }
+          ]
+        }
+      ]
+    },
+    {
+      "program": "CRS620MI",
+      "description": "Supplier. Interface",
+      "transactions": [
+        {
+          "transaction": "LstBySupplier",
+          "description": "List suppliers by supplier number",
+          "type": "LIST",
+          "inputs": ["CONO", "SUNO"],
+          "keyFields": ["CONO", "SUNO"],
+          "outputs": [
+            { "field": "CONO", "description": "Company", "type": "N", "length": 3 },
+            { "field": "SUNO", "description": "Supplier", "type": "A", "length": 10 },
+            { "field": "SUNM", "description": "Supplier name", "type": "A", "length": 36 },
+            { "field": "CSCD", "description": "Country", "type": "A", "length": 3 },
+            { "field": "VRNO", "description": "VAT registration number", "type": "A", "length": 16 },
+            { "field": "CUCD", "description": "Currency", "type": "A", "length": 3 },
+            { "field": "TEPY", "description": "Payment terms", "type": "A", "length": 3 },
+            { "field": "STAT", "description": "Status", "type": "A", "length": 2 }
+          ]
+        }
+      ]
+    },
+    {
+      "program": "MMS200MI",
+      "description": "Item. Interface",
+      "transactions": [
+        {
+          "transaction": "LstItmByItm",
+          "description": "List items by item number",
+          "type": "LIST",
+          "inputs": ["CONO", "ITNO"],
+          "keyFields": ["CONO", "ITNO"],
+          "outputs": [
+            { "field": "CONO", "description": "Company", "type": "N", "length": 3 },
+            { "field": "ITNO", "description": "Item number", "type": "A", "length": 15 },
+            { "field": "ITDS", "description": "Name", "type": "A", "length": 30 },
+            { "field": "UNMS", "description": "Basic unit of measure", "type": "A", "length": 3 },
+            { "field": "ITTY", "description": "Item type", "type": "A", "length": 3 },
+            { "field": "STAT", "description": "Status", "type": "A", "length": 2 }
+          ]
+        }
+      ]
+    }
+  ]
+}

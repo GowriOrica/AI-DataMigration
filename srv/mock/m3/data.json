@@ -1,0 +1,33 @@
+{
+  "_comment": [
+    "MOCK FIXTURE - SYNTHETIC M3 SAMPLE RECORDS (no real the client data)",
+    "Keyed by PROGRAM.TRANSACTION. Includes deliberate data-quality cases:",
+    "same customer in two companies, missing VAT number, payment terms without value mapping,",
+    "blocked customer (STAT 90), customer without extra addresses."
+  ],
+  "CRS610MI.LstByNumber": [
+    { "CONO": "100", "CUNO": "C1001", "CUNM": "Northern Quarry Operations Pty Ltd", "CUA1": "12 Mine Road", "CUA2": "", "CUA3": "", "CUA4": "", "TOWN": "Mackay", "PONO": "4740", "ECAR": "QL", "CSCD": "AU", "PHNO": "+61 7 5550 1001", "TFNO": "", "MAIL": "ap@northernquarry.example", "VRNO": "51824753556", "LNCD": "EN", "CUCD": "AUD", "TEPY": "30", "CUCL": "MIN", "CUTP": "0", "STAT": "20", "RGDT": "20190312" },
+    { "CONO": "200", "CUNO": "C1001", "CUNM": "Northern Quarry Operations Pty Ltd", "CUA1": "12 Mine Road", "CUA2": "", "CUA3": "", "CUA4": "", "TOWN": "Mackay", "PONO": "4740", "ECAR": "QL", "CSCD": "AU", "PHNO": "+61 7 5550 1001", "TFNO": "", "MAIL": "ap@northernquarry.example", "VRNO": "51824753556", "LNCD": "EN", "CUCD": "AUD", "TEPY": "45", "CUCL": "MIN", "CUTP": "0", "STAT": "20", "RGDT": "20200701" },
+    { "CONO": "100", "CUNO": "C1002", "CUNM": "Southern Cross Civil & Tunnelling", "CUA1": "Level 4", "CUA2": "88 Harbour Street", "CUA3": "", "CUA4": "", "TOWN": "Sydney", "PONO": "2000", "ECAR": "NS", "CSCD": "AU", "PHNO": "+61 2 5550 2002", "TFNO": "+61 2 5550 2099", "MAIL": "", "VRNO": "", "LNCD": "EN", "CUCD": "AUD", "TEPY": "30", "CUCL": "CIV", "CUTP": "0", "STAT": "20", "RGDT": "20180105" },
+    { "CONO": "100", "CUNO": "C1003", "CUNM": "Pacific Blasting Services Ltd", "CUA1": "5 Industrial Ave", "CUA2": "", "CUA3": "", "CUA4": "", "TOWN": "Auckland", "PONO": "1010", "ECAR": "", "CSCD": "NZ", "PHNO": "+64 9 555 3003", "TFNO": "", "MAIL": "accounts@pacificblasting.example", "VRNO": "123456789", "LNCD": "EN", "CUCD": "NZD", "TEPY": "60", "CUCL": "MIN", "CUTP": "0", "STAT": "20", "RGDT": "20210919" },
+    { "CONO": "100", "CUNO": "C1004", "CUNM": "Old Gorge Mining Co", "CUA1": "PO Box 77", "CUA2": "", "CUA3": "", "CUA4": "", "TOWN": "Kalgoorlie", "PONO": "6430", "ECAR": "WA", "CSCD": "AU", "PHNO": "", "TFNO": "", "MAIL": "", "VRNO": "98765432109", "LNCD": "EN", "CUCD": "AUD", "TEPY": "30", "CUCL": "MIN", "CUTP": "0", "STAT": "90", "RGDT": "20090220" }
+  ],
+  "CRS610MI.GetFinancial": [
+    { "CONO": "100", "CUNO": "C1001", "DIVI": "AU1", "CRLM": "250000.00", "CRL2": "0.00", "PYCD": "TRF", "DUCD": "1", "BLCD": "0", "ACRF": "" },
+    { "CONO": "200", "CUNO": "C1001", "DIVI": "AU2", "CRLM": "100000.00", "CRL2": "0.00", "PYCD": "TRF", "DUCD": "1", "BLCD": "0", "ACRF": "" },
+    { "CONO": "100", "CUNO": "C1002", "DIVI": "AU1", "CRLM": "500000.00", "CRL2": "50000.00", "PYCD": "CHQ", "DUCD": "2", "BLCD": "0", "ACRF": "CIVIL" },
+    { "CONO": "100", "CUNO": "C1003", "DIVI": "NZ1", "CRLM": "75000.00", "CRL2": "0.00", "PYCD": "TRF", "DUCD": "1", "BLCD": "0", "ACRF": "" },
+    { "CONO": "100", "CUNO": "C1004", "DIVI": "AU1", "CRLM": "0.00", "CRL2": "0.00", "PYCD": "TRF", "DUCD": "", "BLCD": "9", "ACRF": "" }
+  ],
+  "OIS002MI.LstAddress": [
+    { "CONO": "100", "CUNO": "C1001", "ADRT": "1", "ADID": "SITE01", "CUNM": "Northern Quarry - Pit 3", "CUA1": "Pit 3 Access Road", "CUA2": "", "TOWN": "Moranbah", "PONO": "4744", "ECAR": "QL", "CSCD": "AU", "PHNO": "+61 7 5550 1031", "STDT": "0" },
+    { "CONO": "100", "CUNO": "C1001", "ADRT": "3", "ADID": "INV01", "CUNM": "Northern Quarry - Accounts", "CUA1": "PO Box 12", "CUA2": "", "TOWN": "Mackay", "PONO": "4740", "ECAR": "QL", "CSCD": "AU", "PHNO": "", "STDT": "0" },
+    { "CONO": "100", "CUNO": "C1002", "ADRT": "1", "ADID": "SITE01", "CUNM": "Tunnel Project West", "CUA1": "Gate 2, Western Motorway", "CUA2": "", "TOWN": "Penrith", "PONO": "2750", "ECAR": "NS", "CSCD": "AU", "PHNO": "", "STDT": "0" }
+  ],
+  "CRS620MI.LstBySupplier": [
+    { "CONO": "100", "SUNO": "S5001", "SUNM": "Acme Packaging Supplies", "CSCD": "AU", "VRNO": "11222333444", "CUCD": "AUD", "TEPY": "30", "STAT": "20" }
+  ],
+  "MMS200MI.LstItmByItm": [
+    { "CONO": "100", "ITNO": "EXP-0001", "ITDS": "Emulsion bulk", "UNMS": "KG", "ITTY": "FG", "STAT": "20" }
+  ]
+}

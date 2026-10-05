@@ -1,0 +1,15 @@
+{
+  "name": "migration-orchestrator-approuter",
+  "version": "1.0.0",
+  "description": "Opens the AI Migration Cockpit from the HTML5 app repository and forwards /migration to the backend. No login.",
+  "private": true,
+  "scripts": {
+    "start": "node node_modules/@sap/approuter/approuter.js"
+  },
+  "dependencies": {
+    "@sap/approuter": "^23.0.0"
+  },
+  "engines": {
+    "node": "22.x"
+  }
+}

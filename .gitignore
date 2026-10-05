@@ -1,0 +1,23 @@
+node_modules/
+gen/
+target/
+_out/
+mta_archives/
+mta-op-*/
+*_mta_build_tmp
+*.mtar
+Makefile_*.mta
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+.storage/
+.vscode/
+.DS_Store
+# local secrets and service bindings - never commit
+.env
+.cdsrc-private.json
+cdsrc-private.json
+default-*.json
+*credentials*.json
+app/project1/dist/
+resources/*.zip

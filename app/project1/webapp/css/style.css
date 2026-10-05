@@ -1,0 +1,220 @@
+/* ============================================================
+   AI MIGRATION COCKPIT
+   ============================================================ */
+
+.migrationPage {
+    background: #f5f6f7;
+}
+
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.heroSection {
+    margin: 1.25rem 1.5rem 0.75rem 1.5rem;
+    padding: 2rem 2.25rem;
+    border-radius: 0.75rem;
+
+    background: linear-gradient(
+        135deg,
+        #eaf3ff 0%,
+        #f7f9fc 100%
+    );
+}
+
+.heroTitle {
+    font-size: 2rem !important;
+    font-weight: 600 !important;
+}
+
+.heroSubtitle {
+    margin-top: 0.35rem;
+    font-size: 1rem;
+    color: #475e75;
+}
+
+.heroDescription {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: #5f6b7a;
+}
+
+
+/* ============================================================
+   KPI CARDS
+   ============================================================ */
+
+.kpiContainer {
+    margin: 0.75rem 1.5rem 1.25rem 1.5rem;
+    gap: 1rem;
+}
+
+.kpiCard {
+    min-width: 220px;
+
+    flex: 1 1 220px;
+
+    padding: 1.25rem;
+
+    background: #ffffff;
+
+    border-radius: 0.75rem;
+
+    box-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.kpiLabel {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.kpiIcon {
+    font-size: 1.25rem;
+}
+
+.kpiNumber {
+    margin-top: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.kpiDescription {
+    margin-top: 0.25rem;
+    font-size: 0.75rem;
+    color: #6a6d70;
+}
+
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+
+.sectionContainer {
+    margin: 0 1.5rem 1.5rem 1.5rem;
+}
+
+.sectionTitle {
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+}
+
+.sectionDescription {
+    margin-top: 0.25rem;
+    margin-bottom: 0.75rem;
+
+    font-size: 0.85rem;
+    color: #6a6d70;
+}
+
+
+/* ============================================================
+   MIGRATION PANEL
+   ============================================================ */
+
+.migrationPanel {
+    border-radius: 0.75rem;
+
+    box-shadow:
+        0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.fieldContainer {
+    padding: 0.5rem;
+}
+
+.migrationActionContainer {
+    padding: 1rem 0.5rem 0.25rem 0.5rem;
+}
+
+
+/* ============================================================
+   RUN TABLE
+   ============================================================ */
+
+.runsTable {
+    margin-top: 0.5rem;
+
+    background: #ffffff;
+
+    border-radius: 0.75rem;
+}
+
+.runIdText {
+    font-weight: 600;
+}
+
+/* ============================================================
+   AI MAPPING REVIEW
+   ============================================================ */
+
+.mappingSummaryContainer {
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.mappingSummaryCard {
+    min-width: 190px;
+    flex: 1 1 190px;
+    padding: 1rem 1.15rem;
+    background: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+}
+
+.mappingInfoStrip {
+    margin-top: 0.75rem;
+}
+
+.mappingReviewDialog {
+    padding: 1rem 1.25rem;
+    gap: 0.45rem;
+}
+
+.mappingReviewDialog .sapMLabel {
+    margin-top: 0.35rem;
+    font-weight: 600;
+}
+
+
+/* Business objects step: guided intro, flow, facts and the "next" bar */
+.introCard {
+    background: #e5f0fb;
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+}
+
+.flowPill, .factPill {
+    background: #ffffff;
+    border: 1px solid #d9dee5;
+    border-radius: 1rem;
+    padding: 0.15rem 0.75rem;
+    margin: 0 0.5rem 0.4rem 0;
+    font-size: 0.8125rem;
+}
+
+.flowPillMe {
+    border-color: #0a6ed1;
+    color: #0a6ed1;
+    font-weight: 600;
+}
+
+.choiceBox {
+    background: #ffffff;
+    border: 1px solid #d9dee5;
+    border-radius: 0.5rem;
+    padding: 0.9rem 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.nextBar {
+    background: #e3f4e8;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+}
+
+.summaryNumber {
+    font-size: 1.6rem;
+    font-weight: 700;
+}

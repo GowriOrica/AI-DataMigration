@@ -1,0 +1,714 @@
+<mvc:View
+    controllerName="project1.controller.BusinessObjectAssessment"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page
+        showHeader="false"
+        id="businessObjectAssessmentPage"
+        class="migrationPage">
+
+
+        <content>
+
+            <!-- ================================================= -->
+            <!-- MIGRATION JOURNEY                                 -->
+            <!-- ================================================= -->
+
+            <OverflowToolbar style="Clear">
+                <ToolbarSpacer/>
+                <Button icon="sap-icon://refresh" text="Refresh" type="Transparent" press=".onRefresh"/>
+            </OverflowToolbar>
+
+
+            <!-- ================================================= -->
+            <!-- HERO                                               -->
+            <!-- ================================================= -->
+
+            <VBox class="heroSection">
+                <Title text="Business objects" level="H1" class="heroTitle"/>
+                <Text
+                    text="Step 2: find out which programs of the source system belong to which business object, then confirm the result."
+                    class="heroSubtitle"/>
+            </VBox>
+
+            <HBox class="sapUiResponsiveMargin">
+                <SegmentedButton selectedKey="{assessment>/view}" width="30rem">
+                    <items>
+                        <SegmentedButtonItem key="PROGRAMS" text="All programs ({assessment>/inventory/count})"/>
+                        <SegmentedButtonItem key="OBJECTS" text="Business objects ({assessment>/summary/objects})"/>
+                    </items>
+                </SegmentedButton>
+            </HBox>
+
+
+            <!-- ================================================= -->
+            <!-- VIEW 1: ALL PROGRAMS, AND LET THE AI SORT THEM    -->
+            <!-- ================================================= -->
+
+            <VBox class="sapUiResponsiveMargin" visible="{= ${assessment>/view} === 'PROGRAMS' }">
+
+                <VBox class="introCard">
+                    <Title text="What is on this page" level="H4"/>
+                    <Text text="{assessment>/inventory/introText}" class="sapUiTinyMarginTop"/>
+                    <Text text="You do three things: look at the programs, let the AI sort them, then confirm the result." class="sapUiTinyMarginTop"/>
+                </VBox>
+
+                <Title text="Let the AI sort the programs" level="H4" class="sapUiSmallMarginTop"/>
+
+                <HBox wrap="Wrap" class="sapUiTinyMarginTop">
+                    <VBox class="choiceBox sapUiSmallMarginEnd" width="19rem">
+                        <Button
+                            text="Sort all {assessment>/inventory/count} with AI"
+                            icon="sap-icon://ai"
+                            type="Emphasized"
+                            press=".onSortAll"
+                            enabled="{= !${assessment>/scope/busy} &amp;&amp; ${assessment>/inventory/count} > 0 }"/>
+                        <Text text="The AI reads the name and description of every program and proposes a business object for each. {assessment>/inventory/factsText}. You can stop and continue." class="sapUiTinyMarginTop"/>
+                    </VBox>
+                    <VBox class="choiceBox sapUiSmallMarginEnd" width="19rem">
+                        <Button
+                            text="Sort the {assessment>/selectedCount} ticked rows with AI"
+                            icon="sap-icon://ai"
+                            press=".onSortSelected"
+                            enabled="{= !${assessment>/scope/busy} &amp;&amp; ${assessment>/selectedCount} > 0 }"/>
+                        <Text text="Only the programs you tick in the list below. Good for a first try." class="sapUiTinyMarginTop"/>
+                    </VBox>
+                    <VBox class="choiceBox sapUiSmallMarginEnd" width="19rem">
+                        <Button
+                            text="Sort only this area with AI"
+                            icon="sap-icon://ai"
+                            press=".onSortArea"
+                            enabled="{= !${assessment>/scope/busy} &amp;&amp; !!${assessment>/programFilter/area} }"/>
+                        <Text text="Only the programs of the area chosen in the filter below. Choose an area first." class="sapUiTinyMarginTop"/>
+                    </VBox>
+                </HBox>
+
+                <Text
+                    text="Always sent to the AI: names and descriptions. Never sent: your data. Before anything starts, a box shows how many programs go to the AI and you confirm."
+                    class="sapUiTinyMarginTop"/>
+
+                <VBox visible="{= !!${assessment>/scope/assessing} }" class="choiceBox">
+                    <Title text="Sorting..." level="H5"/>
+                    <ProgressIndicator
+                        percentValue="{assessment>/scope/percent}"
+                        displayValue="{assessment>/scope/progressText}"
+                        showValue="true"
+                        state="Information"
+                        class="sapUiTinyMarginTop"/>
+                    <Text text="{assessment>/scope/assessMessage}" class="sapUiTinyMarginTop"/>
+                    <Text text="What is sorted is kept. If you stop, you continue later without starting over." class="sapUiTinyMarginTop"/>
+                    <Button text="Stop" icon="sap-icon://stop" press=".onStopAssess" class="sapUiSmallMarginTop"/>
+                </VBox>
+
+                <MessageStrip
+                    text="{assessment>/scope/error}"
+                    type="Error"
+                    showIcon="true"
+                    visible="{= !!${assessment>/scope/error} }"
+                    class="sapUiSmallMarginTop"/>
+                <HBox alignItems="Center" wrap="Wrap" class="sapUiSmallMarginTop"
+                      visible="{= !${assessment>/scope/assessing} &amp;&amp; !!${assessment>/scope/assessMessage} }">
+                    <MessageStrip
+                        text="{assessment>/scope/assessMessage}"
+                        type="{assessment>/scope/assessType}"
+                        showIcon="true"
+                        class="sapUiSmallMarginEnd"/>
+                    <Button
+                        text="Go to the business objects"
+                        icon="sap-icon://navigation-right-arrow"
+                        iconFirst="false"
+                        press=".onShowObjects"
+                        visible="{= ${assessment>/summary/objects} > 0 }"/>
+                </HBox>
+
+                <Title text="All programs in {assessment>/inventory/system} ({assessment>/inventory/count})" level="H4" class="sapUiMediumMarginTop"/>
+
+                <HBox wrap="Wrap" alignItems="Center" class="sapUiTinyMarginTop">
+                    <SearchField
+                        width="18rem"
+                        placeholder="Search name or description"
+                        liveChange=".onProgramSearch"
+                        class="sapUiSmallMarginEnd"/>
+                    <Select
+                        selectedKey="{assessment>/programFilter/area}"
+                        items="{assessment>/inventory/areaFilter}"
+                        change=".onProgramFilterChange"
+                        class="sapUiSmallMarginEnd">
+                        <core:Item key="{assessment>key}" text="{assessment>text}"/>
+                    </Select>
+                    <Select
+                        selectedKey="{assessment>/programFilter/show}"
+                        change=".onProgramFilterChange"
+                        class="sapUiSmallMarginEnd">
+                        <core:Item key="ALL" text="Show: all"/>
+                        <core:Item key="UNSORTED" text="Show: not sorted yet"/>
+                        <core:Item key="SORTED" text="Show: sorted"/>
+                    </Select>
+                    <Text text="{assessment>/programFilter/countText}"/>
+                </HBox>
+
+                <Table
+                    id="programTable"
+                    items="{assessment>/programs}"
+                    mode="MultiSelect"
+                    growing="true"
+                    growingThreshold="100"
+                    selectionChange=".onProgramSelection"
+                    class="runsTable sapUiTinyMarginTop"
+                    noDataText="Nothing found. Discover the source system on step 1 first.">
+                    <columns>
+                        <Column width="16rem"><Text text="Program"/></Column>
+                        <Column><Text text="What it does"/></Column>
+                        <Column width="16rem"><Text text="Area"/></Column>
+                        <Column width="14rem"><Text text="Business object"/></Column>
+                    </columns>
+                    <items>
+                        <ColumnListItem type="Active" press=".onProgramPress">
+                            <cells>
+                                <ObjectIdentifier title="{assessment>shown}"/>
+                                <Text text="{assessment>description}" maxLines="2"/>
+                                <Text text="{assessment>areaText}"/>
+                                <ObjectStatus text="{assessment>boText}" state="{assessment>boState}" inverted="{assessment>sorted}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
+
+                <Text text="Click a row to see what the program offers (its transactions and fields). Reading this list does not read any business data." class="sapUiTinyMarginTop"/>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- VIEW 2: THE BUSINESS OBJECTS (the result)         -->
+            <!-- ================================================= -->
+
+            <HBox
+                class="sapUiResponsiveMargin"
+                justifyContent="SpaceBetween"
+                alignItems="Center"
+                wrap="Wrap"
+                visible="{= ${assessment>/view} === 'OBJECTS' }">
+                <HBox wrap="Wrap">
+                    <VBox class="sapUiMediumMarginEnd">
+                        <Text text="{assessment>/summary/sorted}" class="summaryNumber"/>
+                        <Text text="programs sorted"/>
+                    </VBox>
+                    <VBox class="sapUiMediumMarginEnd">
+                        <Text text="{assessment>/summary/objects}" class="summaryNumber"/>
+                        <Text text="business objects found"/>
+                    </VBox>
+                    <VBox class="sapUiMediumMarginEnd">
+                        <Text text="{assessment>/summary/confirmed}" class="summaryNumber"/>
+                        <Text text="confirmed by you"/>
+                    </VBox>
+                    <VBox class="sapUiMediumMarginEnd">
+                        <Text text="{assessment>/summary/open}" class="summaryNumber"/>
+                        <Text text="waiting for your review"/>
+                    </VBox>
+                </HBox>
+                <Button
+                    text="Sort more programs"
+                    icon="sap-icon://ai"
+                    tooltip="Back to the list of all programs, where you choose what the AI sorts"
+                    press=".onSortMore"/>
+            </HBox>
+
+
+            <!-- ================================================= -->
+            <!-- DETAILS FOR ADMINISTRATORS                        -->
+            <!-- ================================================= -->
+
+            <Panel
+                class="sapUiResponsiveMargin"
+                headerText="Details for administrators"
+                expandable="true"
+                expanded="false"
+                width="auto"
+                visible="{= ${assessment>/view} === 'PROGRAMS' }">
+                <content>
+                    <Text text="Filters and sizes behind the sort. Preview Scope shows how much would be sent to the AI without sending anything."/>
+                    <HBox wrap="Wrap" alignItems="Center" class="sapUiSmallMarginTop">
+                        <CheckBox text="Business APIs only (S/4)" selected="{assessment>/scope/businessApisOnly}"/>
+                        <CheckBox text="Read transactions only (M3)" selected="{assessment>/scope/readOnly}"/>
+                        <CheckBox text="Include custom programs (M3)" selected="{assessment>/scope/includeCustom}" class="sapUiSmallMarginEnd"/>
+                        <Button
+                            text="Preview Scope"
+                            icon="sap-icon://filter"
+                            press=".onPreviewScope"
+                            enabled="{= !${assessment>/scope/busy} }"/>
+                    </HBox>
+                    <VBox visible="{assessment>/scope/hasResult}" class="sapUiSmallMarginTop">
+
+                        <Title text="How the list shrinks (filter funnel)" level="H4"/>
+
+                        <Table
+                            items="{assessment>/scope/steps}"
+                            width="40rem"
+                            class="sapUiTinyMarginBottom">
+                            <columns>
+                                <Column><Text text="Filter"/></Column>
+                                <Column width="8rem" hAlign="End"><Text text="Remaining"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{assessment>label}"/>
+                                        <ObjectNumber number="{assessment>remaining}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+
+                        <HBox wrap="Wrap" class="sapUiSmallMarginTop">
+                            <ObjectStatus title="In scope" text="{assessment>/scope/toAssess}" class="sapUiMediumMarginEnd"/>
+                            <ObjectStatus title="Already assessed (reused, free)" text="{assessment>/scope/alreadyAssessed}" state="Success" class="sapUiMediumMarginEnd"/>
+                            <ObjectStatus title="Still to assess" text="{assessment>/scope/newToAssess}" state="Warning" class="sapUiMediumMarginEnd"/>
+                            <ObjectStatus title="AI batches" text="{assessment>/scope/batches}" class="sapUiMediumMarginEnd"/>
+                            <ObjectStatus title="Estimated tokens (in / out)" text="{assessment>/scope/tokensText}"/>
+                        </HBox>
+
+                        <Panel
+                            headerText="What was filtered out, and why ({assessment>/scope/excludedCount})"
+                            expandable="true"
+                            expanded="false"
+                            class="sapUiSmallMarginTop">
+                            <Table
+                                items="{assessment>/scope/excluded}"
+                                growing="true"
+                                growingThreshold="15">
+                                <columns>
+                                    <Column><Text text="API / Program"/></Column>
+                                    <Column><Text text="Why the AI chose this"/></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{assessment>name}"/>
+                                            <Text text="{assessment>reason}"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </Panel>
+
+                    </VBox>
+
+                
+                </content>
+            </Panel>
+
+
+            <!-- ================================================= -->
+            <!-- LIST LEFT, SELECTED BUSINESS OBJECT RIGHT         -->
+            <!-- ================================================= -->
+
+            <layout:Grid defaultSpan="XL12 L12 M12 S12" hSpacing="1" vSpacing="0" visible="{= ${assessment>/view} === 'OBJECTS' }">
+
+            <!-- ================================================= -->
+            <!-- BUSINESS OBJECT GROUPS                            -->
+            <!-- ================================================= -->
+
+            <VBox class="sectionContainer">
+                <layoutData>
+                    <layout:GridData span="XL4 L4 M12 S12"/>
+                </layoutData>
+
+                <Title
+                    text="Business objects ({= (${assessment>/groups} || []).length })"
+                    level="H2"
+                    class="sectionTitle"/>
+
+                <SearchField
+                    id="businessObjectSearch"
+                    placeholder="Search business objects"
+                    width="100%"
+                    liveChange=".onBusinessObjectListFilter"
+                    class="sapUiTinyMarginBottom"/>
+
+                <SegmentedButton
+                    id="catalogFilter"
+                    selectedKey="ALL"
+                    selectionChange=".onBusinessObjectListFilter"
+                    class="sapUiTinyMarginBottom">
+                    <items>
+                        <SegmentedButtonItem key="ALL" text="All"/>
+                        <SegmentedButtonItem key="CATALOG" text="In catalog"/>
+                    </items>
+                </SegmentedButton>
+
+                <Table
+                    id="businessObjectTable"
+                    items="{path: 'assessment>/groups', sorter: [{path: 'inCatalog', descending: true}, {path: 'businessObject'}]}"
+                    growing="true"
+                    growingThreshold="30"
+                    mode="SingleSelectMaster"
+                    selectionChange=".onBusinessObjectSelect"
+                    class="runsTable"
+                    noDataText="No business object found.">
+
+                    <columns>
+                        <Column>
+                            <Text text="Business object"/>
+                        </Column>
+                        <Column hAlign="End" width="9rem">
+                            <Text text="Status"/>
+                        </Column>
+                    </columns>
+
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <ObjectIdentifier
+                                    title="{assessment>businessObject}"
+                                    text="{= ${assessment>apiCount} + (${assessment>apiCount} === 1 ? ' program' : ' programs') + ' · ' + ${assessment>confirmedCount} + ' confirmed · ' + ${assessment>openCount} + ' to review' }"/>
+                                <ObjectStatus
+                                    text="{= ${assessment>lastExtraction} ? 'Extracted' : ${assessment>openCount} > 0 ? 'To review' : ${assessment>confirmedCount} > 0 ? 'Confirmed' : 'Needs a person' }"
+                                    state="{= ${assessment>lastExtraction} ? 'Success' : ${assessment>openCount} > 0 ? 'Warning' : ${assessment>confirmedCount} > 0 ? 'Success' : 'Error' }"
+                                    inverted="true"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+
+                </Table>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- SELECTED BUSINESS OBJECT DETAILS                 -->
+            <!-- ================================================= -->
+
+            <VBox>
+                <layoutData>
+                    <layout:GridData span="XL8 L8 M12 S12"/>
+                </layoutData>
+
+            <VBox
+                class="sectionContainer"
+                visible="{= !${assessment>/selectedBusinessObject} }">
+                <Title text="No business object selected" level="H3"/>
+                <Text text="Click a business object in the list to check its programs and choose the data to read."/>
+            </VBox>
+
+            <VBox
+                class="sectionContainer"
+                visible="{= !!${assessment>/selectedBusinessObject} }">
+
+                <!-- header of the selected business object -->
+                <HBox justifyContent="SpaceBetween" alignItems="Center" wrap="Wrap">
+                    <HBox alignItems="Center" wrap="Wrap">
+                        <Title
+                            text="{assessment>/selectedBusinessObject/businessObject}"
+                            level="H2"
+                            class="sectionTitle sapUiSmallMarginEnd"/>
+                        <Button
+                            text="Confirm all {assessment>/selectedBusinessObject/openCount}"
+                            icon="sap-icon://accept"
+                            type="Emphasized"
+                            visible="{= ${assessment>/selectedBusinessObject/openCount} > 0 }"
+                            press=".onConfirmAll"/>
+                    </HBox>
+                    <ObjectStatus
+                        text="{= ${assessment>/selectedBusinessObject/catalogCode} ? 'Catalog: ' + ${assessment>/selectedBusinessObject/catalogCode} : 'Not in the business object catalog' }"
+                        state="{= ${assessment>/selectedBusinessObject/catalogCode} ? 'Information' : 'Warning' }"
+                        inverted="true"/>
+                </HBox>
+                <HBox wrap="Wrap" class="sapUiTinyMarginTop">
+                    <ObjectStatus title="Confirmed" text="{assessment>/selectedBusinessObject/confirmedCount}" state="Success" class="sapUiMediumMarginEnd"/>
+                    <ObjectStatus title="Rejected" text="{assessment>/selectedBusinessObject/rejectedCount}" state="Error" class="sapUiMediumMarginEnd"/>
+                    <ObjectStatus title="Open" text="{assessment>/selectedBusinessObject/openCount}" state="Warning" class="sapUiMediumMarginEnd"/>
+                    <ObjectStatus title="Last extraction" text="{= ${assessment>/selectedBusinessObject/extractPlan/lastText} || 'not extracted yet' }"/>
+                </HBox>
+
+                <!-- the work in order: 1. review the APIs, 2. extract -->
+                <IconTabBar
+                    id="detailTabs"
+                    selectedKey="review"
+                    expandable="false"
+                    headerMode="Inline"
+                    class="sapUiSmallMarginTop">
+                    <items>
+
+                    <IconTabFilter key="review" text="1. Check the grouping">
+                    <Text
+                        text="The AI only proposes. Confirm what is right, reject what is wrong, or move a program to another business object. Only confirmed items are read."
+                        class="sapUiSmallMarginBottom"/>
+                    <HBox justifyContent="SpaceBetween" alignItems="Center" wrap="Wrap">
+                        <SegmentedButton
+                            id="reviewFilter"
+                            selectedKey="ALL"
+                            width="32rem"
+                            selectionChange=".onReviewFilterChange">
+                            <items>
+                                <SegmentedButtonItem key="ALL" text="All {assessment>/selectedBusinessObject/apiCount}"/>
+                                <SegmentedButtonItem key="SUGGESTED" text="Open {assessment>/selectedBusinessObject/openCount}"/>
+                                <SegmentedButtonItem key="CONFIRMED" text="Confirmed {assessment>/selectedBusinessObject/confirmedCount}"/>
+                                <SegmentedButtonItem key="REJECTED" text="Rejected {assessment>/selectedBusinessObject/rejectedCount}"/>
+                            </items>
+                        </SegmentedButton>
+                        <HBox>
+                            <Button
+                                text="Choose data sets"
+                                icon="sap-icon://add-product"
+                                tooltip="A program holds no data itself. This adds the lists (M3) or entity sets (S/4) of the confirmed programs / APIs, so that their data is read"
+                                press=".onAddEntitySets"
+                                class="sapUiTinyMarginEnd"/>
+                            <Button
+                                text="Add API"
+                                icon="sap-icon://add"
+                                tooltip="Add an API of the source system to this business object"
+                                press=".onAddApi"/>
+                        </HBox>
+                    </HBox>
+                <Table
+                    id="businessObjectApiTable"
+                    items="{path: 'assessment>/selectedBusinessObject/apis', sorter: [{path: 'reviewStatus', descending: true}, {path: 'confidence', descending: false}]}"
+                    growing="true"
+                    growingThreshold="50"
+                    class="runsTable"
+                    noDataText="No APIs found for this business object.">
+
+                    <columns>
+
+                        <Column width="22%"><Text text="Program"/></Column>
+                        <Column width="22%"><Text text="What it does"/></Column>
+                        <Column width="30%"><Text text="Why the AI put it here"/></Column>
+                        <Column width="26%"><Text text="Your decision"/></Column>
+                    </columns>
+
+
+                    <items>
+
+                        <ColumnListItem>
+
+                            <cells>
+
+                                <ObjectIdentifier
+                                    title="{assessment>sourceObject}"
+                                    text="{assessment>component}"/>
+
+                                <Text text="{assessment>description}" maxLines="3"/>
+
+                                <VBox>
+                                    <Text text="{assessment>reason}" maxLines="3"/>
+                                    <Text
+                                        text="AI said: {assessment>originalBusinessObject}"
+                                        visible="{= !!${assessment>originalBusinessObject} }"
+                                        class="sapUiTinyMarginTop"/>
+                                    <Text
+                                        text="Review note: {assessment>reviewComment}"
+                                        visible="{= !!${assessment>reviewComment} }"
+                                        class="sapUiTinyMarginTop"/>
+                                    <Text
+                                        text="{= ${assessment>origin} === 'MANUAL' ? 'Added by you' : ${assessment>origin} === 'ENTITY_SET' ? 'Data set of a program / API' : ${assessment>originalBusinessObject} ? 'Moved by you' : '' }"
+                                        visible="{= ${assessment>origin} === 'MANUAL' || ${assessment>origin} === 'ENTITY_SET' || !!${assessment>originalBusinessObject} }"
+                                        class="sapUiTinyMarginTop"/>
+                                </VBox>
+
+                                <VBox>
+                                    <ObjectStatus
+                                        text="{= ${assessment>reviewStatus} === 'CONFIRMED' ? 'Confirmed' : ${assessment>reviewStatus} === 'REJECTED' ? 'Rejected' : 'To review' }"
+                                        state="{= ${assessment>reviewStatus} === 'CONFIRMED' ? 'Success' : ${assessment>reviewStatus} === 'REJECTED' ? 'Error' : 'Warning' }"
+                                        inverted="true"/>
+                                    <HBox wrap="Wrap" class="sapUiTinyMarginTop">
+                                        <Button text="Confirm" type="Transparent" press=".onReviewConfirm"/>
+                                        <Button text="Reject" type="Transparent" press=".onReviewReject"/>
+                                        <Button text="Move" type="Transparent" tooltip="Move to another business object" press=".onReviewChange"/>
+                                    </HBox>
+                                </VBox>
+
+                            </cells>
+
+                        </ColumnListItem>
+
+                    </items>
+
+                </Table>
+                    </IconTabFilter>
+
+                    <IconTabFilter key="extract" text="2. Read the data">
+                        <Text
+                            text="Reads the records of the confirmed APIs and entity sets from the source system in the background and stores them as files in the Object Store, with a checksum per file. You can leave this page while it runs."
+                            class="sapUiSmallMarginBottom"/>
+
+                        <Panel
+                            headerText="{= (${assessment>/selectedBusinessObject/extractPlan/rows} || []).length } confirmed items (APIs and entity sets) will be extracted"
+                            expandable="true"
+                            expanded="false"
+                            class="sapUiNoContentPadding">
+                        <Table
+                            id="extractPlanTable"
+                            items="{assessment>/selectedBusinessObject/extractPlan/rows}"
+                            noDataText="No confirmed API yet. Confirm at least one API in tab 1 - only confirmed APIs are extracted."
+                            class="runsTable">
+                            <columns>
+                                <Column><Text text="API"/></Column>
+                                <Column width="10rem"><Text text="Origin"/></Column>
+                                <Column width="16rem"><Text text="In the last extraction"/></Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{assessment>api}"/>
+                                        <Text text="{assessment>origin}"/>
+                                        <ObjectStatus text="{assessment>lastText}" state="{assessment>lastState}"/>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                        </Panel>
+
+                        <MessageStrip
+                            text="{assessment>/selectedBusinessObject/extractPlan/changeText}"
+                            type="Warning"
+                            showIcon="true"
+                            visible="{= !!${assessment>/selectedBusinessObject/extractPlan/changeText} }"
+                            class="sapUiSmallMarginTop"/>
+
+                        <HBox wrap="Wrap" alignItems="End" class="sapUiSmallMarginTop">
+                            <VBox class="sapUiMediumMarginEnd">
+                                <Label text="Max records per item (empty = all)"/>
+                                <Input
+                                    value="{assessment>/extract/maxRecords}"
+                                    type="Number"
+                                    placeholder="all, up to 100,000"
+                                    width="12rem"/>
+                            </VBox>
+                            <Button
+                                text="Start extraction"
+                                icon="sap-icon://upload-to-cloud"
+                                type="Emphasized"
+                                press=".onExtractToObjectStore"
+                                enabled="{= ${assessment>/selectedBusinessObject/confirmedCount} > 0 &amp;&amp; !${assessment>/extract/busy} &amp;&amp; !${assessment>/extract/job/active} }"
+                                class="sapUiSmallMarginEnd"/>
+                            <Button
+                                text="Cancel"
+                                icon="sap-icon://stop"
+                                visible="{assessment>/extract/job/active}"
+                                press=".onCancelExtraction"
+                                class="sapUiSmallMarginEnd"/>
+                            <Button
+                                text="Resume"
+                                icon="sap-icon://media-play"
+                                visible="{assessment>/extract/job/resumable}"
+                                press=".onResumeExtraction"
+                                class="sapUiSmallMarginEnd"/>
+                            <Button
+                                text="Verify last extraction"
+                                icon="sap-icon://validate"
+                                press=".onVerifyExtraction"
+                                enabled="{= !!${assessment>/selectedBusinessObject/lastExtraction} &amp;&amp; !${assessment>/extract/busy} }"
+                                class="sapUiSmallMarginEnd"/>
+                            <Button
+                                text="View records in Source Data"
+                                icon="sap-icon://navigation-right-arrow"
+                                iconFirst="false"
+                                press=".onContinueToSource"
+                                enabled="{= !!${assessment>/selectedBusinessObject/lastExtraction} &amp;&amp; !${assessment>/extract/busy} }"/>
+                            <BusyIndicator
+                                visible="{assessment>/extract/busy}"
+                                size="1.5rem"
+                                class="sapUiSmallMarginBegin"/>
+                        </HBox>
+
+                        <MessageStrip
+                            text="{assessment>/extract/message}"
+                            type="{assessment>/extract/type}"
+                            showIcon="true"
+                            visible="{= !!${assessment>/extract/message} }"
+                            class="sapUiSmallMarginTop"/>
+
+                        <!-- THE LATEST EXTRACTION JOB (also one that was started in Joule) -->
+                        <VBox visible="{assessment>/extract/job/has}" class="sapUiSmallMarginTop">
+                            <HBox alignItems="Center" wrap="Wrap">
+                                <Title text="Extraction {assessment>/extract/job/extractionId}" level="H3" class="sapUiSmallMarginEnd"/>
+                                <ObjectStatus text="{assessment>/extract/job/status}" state="{assessment>/extract/job/state}" inverted="true"/>
+                            </HBox>
+                            <ProgressIndicator
+                                percentValue="{assessment>/extract/job/percentValue}"
+                                displayValue="{assessment>/extract/job/displayValue}"
+                                state="{assessment>/extract/job/state}"
+                                showValue="true"
+                                class="sapUiSmallMarginTopBottom"/>
+                            <Text text="{assessment>/extract/job/message}" class="sapUiSmallMarginBottom"/>
+                            <Table
+                                items="{assessment>/extract/job/objects}"
+                                growing="true"
+                                growingThreshold="40"
+                                class="runsTable">
+                                <columns>
+                                    <Column><Text text="API / entity set"/></Column>
+                                    <Column width="9rem"><Text text="State"/></Column>
+                                    <Column hAlign="End" width="8rem"><Text text="Records"/></Column>
+                                    <Column hAlign="End" width="8rem"><Text text="In the source"/></Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{assessment>objectName}"/>
+                                            <ObjectStatus text="{assessment>stateText}" state="{assessment>state}"/>
+                                            <Text text="{assessment>records}"/>
+                                            <Text text="{assessment>expected}"/>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </VBox>
+                    </IconTabFilter>
+
+                    </items>
+                </IconTabBar>
+
+            </VBox>
+
+            </VBox>
+
+            </layout:Grid>
+
+            <HBox
+                justifyContent="SpaceBetween"
+                alignItems="Center"
+                wrap="Wrap"
+                class="nextBar sapUiResponsiveMargin"
+                visible="{= ${assessment>/view} === 'OBJECTS' &amp;&amp; ${assessment>/summary/objects} > 0 }">
+                <Text text="{assessment>/nextText}"/>
+                <Button
+                    text="Choose data sets"
+                    icon="sap-icon://add-product"
+                    type="Emphasized"
+                    press=".onChooseDataSets"/>
+            </HBox>
+
+
+            <!-- ================================================= -->
+            <!-- FOOTER                                             -->
+            <!-- ================================================= -->
+
+            <HBox
+                justifyContent="SpaceBetween"
+                class="migrationActionContainer">
+
+                <Button
+                    text="Back to Discovery"
+                    icon="sap-icon://navigation-left-arrow"
+                    type="Transparent"
+                    press=".onBackToDiscovery"/>
+
+                <Button
+                    text="{= ${assessment>/selectedBusinessObject} ? 'Continue with ' + ${assessment>/selectedBusinessObject/businessObject} + ' to Source Data' : 'Continue to Source Data' }"
+                    icon="sap-icon://navigation-right-arrow"
+                    type="Emphasized"
+                    press=".onContinueToSource"/>
+
+            </HBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>

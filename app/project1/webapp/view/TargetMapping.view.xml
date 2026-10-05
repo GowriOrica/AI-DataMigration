@@ -1,0 +1,480 @@
+<mvc:View
+    controllerName="project1.controller.TargetMapping"
+    displayBlock="true"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:layout="sap.ui.layout">
+
+    <Page
+        showHeader="false"
+        id="targetMappingPage"
+        title="Target Understanding &amp; AI Mapping">
+
+
+
+        <content>
+
+
+            <!-- ================================================= -->
+            <!-- HEADER -->
+            <!-- ================================================= -->
+
+            <VBox class="sectionContainer">
+
+                <Title
+                    text="Target Understanding &amp; AI Mapping"
+                    level="H1"
+                    class="sectionTitle"/>
+
+                <Text
+                    text="Understand the target structure and review AI-generated mapping recommendations."
+                    class="sectionDescription"/>
+
+
+                <Panel
+                    class="migrationPanel">
+
+                    <layout:Grid
+                        defaultSpan="XL3 L3 M6 S12"
+                        hSpacing="1"
+                        vSpacing="1">
+
+                        <VBox>
+
+                            <Label text="Source"/>
+
+                            <Text
+                                text="{migrationContext>/businessObject}"/>
+
+                        </VBox>
+
+
+                        <VBox>
+
+                            <Label text="Target System"/>
+
+                            <Text
+                                text="{migrationContext>/targetSystemName}"/>
+
+                        </VBox>
+
+
+                        <VBox>
+
+                            <Label text="Target Object"/>
+
+                            <Text
+                                text="{targetMapping>/targetObject}"/>
+
+                        </VBox>
+
+
+                        <VBox>
+
+                            <Label text="Target Status"/>
+
+                            <ObjectStatus
+                                text="{targetMapping>/targetStatus}"
+                                state="Success"/>
+
+                        </VBox>
+
+                    </layout:Grid>
+
+                </Panel>
+
+            </VBox>
+
+                        <!-- ================================================= -->
+            <!-- MIGRATION INTELLIGENCE STATUS -->
+            <!-- ================================================= -->
+
+            <VBox class="sectionContainer">
+
+                <Title
+                    text="Migration Intelligence Status"
+                    level="H2"
+                    class="sectionTitle"/>
+
+                <Panel class="migrationPanel">
+
+                    <layout:Grid
+                        defaultSpan="XL2 L2 M4 S12"
+                        hSpacing="1"
+                        vSpacing="1">
+
+                        <VBox>
+                            <Label text="Source Metadata"/>
+
+                            <ObjectStatus
+                                text="Discovered"
+                                icon="sap-icon://accept"
+                                state="Success"/>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="Target Metadata"/>
+
+                            <ObjectStatus
+                                text="Discovered"
+                                icon="sap-icon://accept"
+                                state="Success"/>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="Data Profiling"/>
+
+                            <ObjectStatus
+                                text="Completed"
+                                icon="sap-icon://accept"
+                                state="Success"/>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="Semantic Mapping"/>
+
+                            <ObjectStatus
+                                text="POC / AI Core Ready"
+                                icon="sap-icon://pending"
+                                state="Warning"/>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="Target Validation"/>
+
+                            <ObjectStatus
+                                text="Pending"
+                                icon="sap-icon://pending"
+                                state="None"/>
+                        </VBox>
+
+                        <VBox>
+                            <Label text="Approval"/>
+
+                            <ObjectStatus
+                                text="Required"
+                                icon="sap-icon://pending"
+                                state="Warning"/>
+                        </VBox>
+
+                    </layout:Grid>
+
+                </Panel>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- TARGET FIELDS -->
+            <!-- ================================================= -->
+            <!-- ================================================= -->
+            <!-- TARGET FIELDS -->
+            <!-- ================================================= -->
+
+            <VBox class="sectionContainer">
+
+                <Title
+                    text="Target Fields"
+                    level="H2"
+                    class="sectionTitle"/>
+
+                <Text
+                    text="Fields dynamically discovered from the selected target."
+                    class="sectionDescription"/>
+
+
+                <Table
+                    id="targetFieldsTable"
+                    items="{targetMapping>/targetFields}"
+                    growing="true"
+                    growingThreshold="20"
+                    class="runsTable">
+
+                    <columns>
+
+                        <Column>
+                            <Text text="Target Field"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Data Type"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Mandatory"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Semantic Type"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Description"/>
+                        </Column>
+
+                    </columns>
+
+
+                    <items>
+
+                        <ColumnListItem>
+
+                            <cells>
+
+                                <Text
+                                    text="{targetMapping>fieldName}"
+                                    class="runIdText"/>
+
+                                <Text
+                                    text="{targetMapping>dataType}"/>
+
+                                <ObjectStatus
+                                    text="{
+                                        path: 'targetMapping>mandatory',
+                                        formatter: '.formatMandatory'
+                                    }"
+                                    state="{
+                                        path: 'targetMapping>mandatory',
+                                        formatter: '.formatMandatoryState'
+                                    }"/>
+
+                                <Text
+                                    text="{targetMapping>semanticType}"/>
+
+                                <Text
+                                    text="{targetMapping>description}"/>
+
+                            </cells>
+
+                        </ColumnListItem>
+
+                    </items>
+
+                </Table>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- AI MAPPING -->
+            <!-- ================================================= -->
+
+            <VBox class="sectionContainer">
+
+                <Title
+                    text="AI Mapping Recommendations"
+                    level="H2"
+                    class="sectionTitle"/>
+
+                <Text
+                    text="AI recommendations combine metadata, semantic meaning, data types and available target information."
+                    class="sectionDescription"/>
+
+
+                <Table
+                    id="mappingTable"
+                    items="{targetMapping>/mappings}"
+                    growing="true"
+                    class="runsTable">
+
+                    <columns>
+
+                        <Column>
+                            <Text text="Source Field"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Canonical Field"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Target Field"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Confidence"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Transformation"/>
+                        </Column>
+
+                        <Column>
+                            <Text text="Approval"/>
+                        </Column>
+
+                        <Column width="7rem">
+                            <Text text="Review"/>
+                        </Column>
+
+                    </columns>
+
+
+                    <items>
+
+                        <ColumnListItem>
+
+                            <cells>
+
+                                <Text
+                                    text="{targetMapping>sourceField}"
+                                    class="runIdText"/>
+
+                                <Text
+                                    text="{targetMapping>canonicalField}"/>
+
+                                <Text
+                                    text="{targetMapping>targetField}"/>
+
+                                <ObjectStatus
+                                    text="{
+                                        path: 'targetMapping>confidence',
+                                        formatter: '.formatConfidence'
+                                    }"
+                                    state="{
+                                        path: 'targetMapping>confidence',
+                                        formatter: '.formatConfidenceState'
+                                    }"/>
+
+                                <ObjectStatus
+                                    text="{
+                                        path: 'targetMapping>transformationRequired',
+                                        formatter: '.formatTransformation'
+                                    }"
+                                    state="{
+                                        path: 'targetMapping>transformationRequired',
+                                        formatter: '.formatTransformationState'
+                                    }"/>
+
+                                <ObjectStatus
+                                    text="{
+                                        path: 'targetMapping>approvalRequired',
+                                        formatter: '.formatApproval'
+                                    }"
+                                    state="{
+                                        path: 'targetMapping>approvalRequired',
+                                        formatter: '.formatApprovalState'
+                                    }"/>
+
+                                <Button
+                                    text="Review"
+                                    type="Transparent"
+                                    icon="sap-icon://edit"
+                                    press=".onReviewMapping"/>
+
+                            </cells>
+
+                        </ColumnListItem>
+
+                    </items>
+
+                </Table>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- REVIEW SUMMARY -->
+            <!-- ================================================= -->
+
+            <VBox class="sectionContainer">
+
+                <Title
+                    text="Mapping Review Summary"
+                    level="H2"
+                    class="sectionTitle"/>
+
+                <HBox
+                    class="mappingSummaryContainer"
+                    wrap="Wrap">
+
+                    <VBox class="mappingSummaryCard">
+                        <Text text="Mappings Analyzed" class="kpiLabel"/>
+                        <ObjectNumber number="{targetMapping>/mappingCount}" class="kpiNumber"/>
+                    </VBox>
+
+                    <VBox class="mappingSummaryCard">
+                        <Text text="High Confidence" class="kpiLabel"/>
+                        <ObjectNumber number="{targetMapping>/highConfidenceCount}" class="kpiNumber"/>
+                    </VBox>
+
+                    <VBox class="mappingSummaryCard">
+                        <Text text="Needs Review" class="kpiLabel"/>
+                        <ObjectNumber number="{targetMapping>/approvalRequiredCount}" class="kpiNumber"/>
+                    </VBox>
+
+                    <VBox class="mappingSummaryCard">
+                        <Text text="Human Corrections" class="kpiLabel"/>
+                        <ObjectNumber number="{targetMapping>/correctionCount}" class="kpiNumber"/>
+                    </VBox>
+
+                </HBox>
+
+                <MessageStrip
+                    text="Review low-confidence recommendations before approval. Functional corrections are captured as POC feedback for the migration run."
+                    type="Information"
+                    showIcon="true"
+                    class="mappingInfoStrip"/>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- AI EXPLANATION -->
+            <!-- ================================================= -->
+
+            <VBox class="sectionContainer">
+
+                <Panel
+                    class="aiExplanationPanel">
+
+                    <VBox>
+
+                        <Title
+                            text="AI Recommendation"
+                            level="H3"/>
+
+                        <Text
+                            text="{targetMapping>/explanation}"
+                            class="aiExplanationText"/>
+
+                    </VBox>
+
+                </Panel>
+
+            </VBox>
+
+
+            <!-- ================================================= -->
+            <!-- ACTIONS -->
+            <!-- ================================================= -->
+
+            <HBox
+                justifyContent="End"
+                class="migrationActionContainer">
+
+                <Button
+                    text="Back"
+                    type="Transparent"
+                    press=".onBack"/>
+
+                <Button
+                    text="Approve Mapping"
+                    icon="sap-icon://accept"
+                    type="Emphasized"
+                    press=".onApproveMapping"/>
+
+                <Button
+                    text="Continue to Run"
+                    icon="sap-icon://navigation-right-arrow"
+                    type="Emphasized"
+                    press=".onContinueToRun"/>
+
+            </HBox>
+
+        </content>
+
+    </Page>
+
+</mvc:View>
