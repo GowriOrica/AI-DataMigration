@@ -7,12 +7,12 @@ modules:
   type: hdb
   path: gen/db
   requires:
-  - name: migration-orchestrator-hdi
+  - name: ai-migration-cockpit-hdi
 - name: migration-orchestrator-srv
   type: nodejs
   path: gen/srv
   requires:
-  - name: migration-orchestrator-hdi
+  - name: ai-migration-cockpit-hdi
   - name: migration-orchestrator-auth
   - name: migration-orchestrator-destination-service
   - name: migration-objectstore
@@ -81,16 +81,16 @@ modules:
     - npm run build:cf
     supported-platforms: []
 resources:
-- name: migration-orchestrator-hdi
+- name: ai-migration-cockpit-hdi
   type: org.cloudfoundry.existing-service
   parameters:
-    service-name: migration-orchestrator-hdi
+    service-name: ai-migration-cockpit-hdi
 # Object Store credentials (user-provided service, tag "objectstore").
 # Trial: holds a key of the company Object Store; the app finds it by tag.
 - name: migration-objectstore
   type: org.cloudfoundry.existing-service
   parameters:
-    service-name: migration-objectstore
+    service-name: Object-Store
 - name: migration-orchestrator-auth
   type: org.cloudfoundry.managed-service
   parameters:
